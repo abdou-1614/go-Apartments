@@ -21,7 +21,10 @@ func HandleValidationError(err error, ctx iris.Context) {
 		fmt.Println("ValidationError", validationErrors)
 		ctx.StopWithProblem(
 			iris.StatusBadRequest,
-			iris.NewProblem().Title("Validation Error").Detail("One or More Field faild To Be Validated").Key("Errors", validationErrors),
+			iris.NewProblem().
+				Title("Validation Error").
+				Detail("One or More Field faild To Be Validated").
+				Key("Errors", validationErrors),
 		)
 		return
 	}
