@@ -4,6 +4,7 @@ import (
 	"go-appointement/routes"
 	"go-appointement/storage"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/kataras/iris/v12"
 )
@@ -12,6 +13,8 @@ func main() {
 	godotenv.Load()
 	storage.InitializeDb()
 	app := iris.Default()
+
+	app.Validator = validator.New()
 
 	location := app.Party("api/location")
 
