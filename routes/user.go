@@ -1,11 +1,11 @@
 package routes
 
 import (
-	"fmt"
 	"go-appointement/model"
 	"strings"
 
 	"go-appointement/storage"
+	"go-appointement/utils"
 
 	"github.com/kataras/iris/v12"
 	"golang.org/x/crypto/bcrypt"
@@ -17,7 +17,7 @@ func Register(ctx iris.Context) {
 	err := ctx.ReadJSON(&userInput)
 
 	if err != nil {
-		fmt.Println(err.Error())
+		utils.HandleValidationError(err, ctx)
 		return
 	}
 
@@ -26,19 +26,19 @@ func Register(ctx iris.Context) {
 	userExist, userExistErr := HandleUserExits(&newUser, userInput.Email)
 
 	if userExistErr != nil {
-		fmt.Println(userExistErr.Error())
+		utils.CreateInternalServerError(ctx)
 		return
 	}
 
 	if userExist == true {
-		fmt.Println("USER EXIST")
+		utils.CreateError(iris.StatusConflict, "Conflict", "User Already Exist", ctx)
 		return
 	}
 
 	hashedPassword, hashedErr := HashPassword(userInput.Password)
 
 	if hashedErr != nil {
-		fmt.Println(hashedErr.Error())
+		utils.CreateInternalServerError(ctx)
 		return
 	}
 
