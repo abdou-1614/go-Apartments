@@ -11,6 +11,49 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func Login(ctx iris.Context) {
+	var userInput LoginUserInput
+
+	err := ctx.JSON(&userInput)
+
+	if err != nil {
+		utils.HandleValidationError(err, ctx)
+		return
+	}
+
+	var existUser model.User
+
+	userExist, userExistErr := HandleUserExits(&existUser, userInput.Email)
+
+	if userExistErr != nil {
+		utils.CreateInternalServerError(ctx)
+		return
+	}
+
+	if userExist == false {
+		utils.CreateError(iris.StatusUnauthorized, "Credentials Error", "Invalid Email Or Password", ctx)
+		return
+	}
+
+	if existUser.SocialLogin == true {
+		utils.CreateError(iris.StatusUnauthorized, "Credentials Error", "Social Login Account", ctx)
+		return
+	}
+
+	passwordErr := bcrypt.CompareHashAndPassword([]byte(existUser.Password), []byte(userInput.Password))
+
+	if passwordErr != nil {
+		utils.CreateError(iris.StatusUnauthorized, "Credentials Error", "Invalid Email Or Password", ctx)
+		return
+	}
+	ctx.JSON(iris.Map{
+		"ID":        existUser.ID,
+		"FIRSTNAME": existUser.FirstName,
+		"LASTNAME":  existUser.LastName,
+		"EMAIL":     existUser.Email,
+	})
+}
+
 func Register(ctx iris.Context) {
 	var userInput RegisterUser
 
@@ -21,9 +64,9 @@ func Register(ctx iris.Context) {
 		return
 	}
 
-	var newUser model.User
+	var existUser model.User
 
-	userExist, userExistErr := HandleUserExits(&newUser, userInput.Email)
+	userExist, userExistErr := HandleUserExits(&existUser, userInput.Email)
 
 	if userExistErr != nil {
 		utils.CreateInternalServerError(ctx)
@@ -42,7 +85,7 @@ func Register(ctx iris.Context) {
 		return
 	}
 
-	newUser = model.User{
+	existUser = model.User{
 		FirstName:   userInput.FirstName,
 		LastName:    userInput.LastName,
 		Email:       strings.ToLower(userInput.Email),
@@ -50,13 +93,13 @@ func Register(ctx iris.Context) {
 		SocialLogin: false,
 	}
 
-	storage.DB.Create(&newUser)
+	storage.DB.Create(&existUser)
 
 	ctx.JSON(iris.Map{
-		"ID":        newUser.ID,
-		"FIRSTNAME": newUser.FirstName,
-		"LASTNAME":  newUser.LastName,
-		"EMAIL":     newUser.Email,
+		"ID":        existUser.ID,
+		"FIRSTNAME": existUser.FirstName,
+		"LASTNAME":  existUser.LastName,
+		"EMAIL":     existUser.Email,
 	})
 
 }
@@ -91,4 +134,9 @@ type RegisterUser struct {
 	LastName  string `json:"lastName" validate:"required,max=265"`
 	Email     string `json:"email" validate:"email,required,max=265"`
 	Password  string `json:"password" validate:"required,min=6,max=265"`
+}
+
+type LoginUserInput struct {
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
