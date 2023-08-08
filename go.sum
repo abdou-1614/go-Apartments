@@ -78,6 +78,8 @@ github.com/kataras/iris/v12 v12.2.0 h1:WzDY5nGuW/LgVaFS5BtTkW3crdSKJ/FEgWnxPnIVV
 github.com/kataras/iris/v12 v12.2.0/go.mod h1:BLzBpEunc41GbE68OUaQlqX4jzi791mx5HU04uPb90Y=
 github.com/kataras/iris/v12 v12.2.1 h1:KV4XwpkfmtFcsWUIqG1h5X4wXjhwvxvr5QCEk14HF20=
 github.com/kataras/iris/v12 v12.2.1/go.mod h1:PIK2JnQFbcugm3EGp997vYHD5ZRpjhNouZj6bRxlEpU=
+github.com/kataras/jwt v0.1.8 h1:u71baOsYD22HWeSOg32tCHbczPjdCk7V4MMeJqTtmGk=
+github.com/kataras/jwt v0.1.8/go.mod h1:Q5j2IkcIHnfwy+oNY3TVWuEBJNw0ADgCcXK9CaZwV4o=
 github.com/kataras/pio v0.0.11 h1:kqreJ5KOEXGMwHAWHDwIl+mjfNCPhAwZPa8gK7MKlyw=
 github.com/kataras/pio v0.0.11/go.mod h1:38hH6SWH6m4DKSYmRhlrCJ5WItwWgCVrTNU62XZyUvI=
 github.com/kataras/pio v0.0.12 h1:o52SfVYauS3J5X08fNjlGS5arXHjW/ItLkyLcKjoH6w=
