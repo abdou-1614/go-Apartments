@@ -12,6 +12,7 @@ import (
 func main() {
 	godotenv.Load()
 	storage.InitializeDb()
+	storage.InitializeRedis()
 	app := iris.Default()
 
 	app.Validator = validator.New()
