@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/jwt"
 )
 
@@ -47,6 +48,48 @@ func CreateToken(id uint) (*jwt.TokenPair, error) {
 
 }
 
+func RefreshToken(ctx iris.Context) {
+	token := jwt.GetVerifiedToken(ctx)
+	tokenStr := string(token.Token)
+
+	validateToken, tokenErr := storage.Redis.Get(bgContext, tokenStr).Result()
+
+	if tokenErr != nil {
+		CreateError(iris.StatusNotFound, "Token Not Found", "Token Not Found", ctx)
+		return
+	}
+
+	if validateToken != "true" {
+		CreateInternalServerError(ctx)
+		return
+	}
+
+	storage.Redis.Del(bgContext, tokenStr)
+
+	userID, parseID := strconv.ParseUint(token.StandardClaims.Subject, 10, 12)
+
+	if parseID != nil {
+		CreateInternalServerError(ctx)
+		return
+	}
+
+	tokenPair, tokenPairErr := CreateToken(uint(userID))
+
+	if tokenPairErr != nil {
+		CreateInternalServerError(ctx)
+		return
+	}
+
+	ctx.JSON(iris.Map{
+		"accessToken":  string(tokenPair.AccessToken),
+		"refreshToken": string(tokenPair.RefreshToken),
+	})
+}
+
 type AccessToken struct {
 	ID uint `json:"ID"`
+}
+
+type RefreshTokenInput struct {
+	RefreshToken string `json:"refreshToken" validate:"required"`
 }
