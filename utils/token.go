@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"go-appointement/model"
 	"go-appointement/storage"
 	"os"
 	"strconv"
@@ -13,7 +14,7 @@ import (
 
 var bgContext = context.Background()
 
-func CreateToken(id uint) (*jwt.TokenPair, error) {
+func CreateToken(id uint, role model.UserRole) (*jwt.TokenPair, error) {
 	accessTokenSinger := jwt.NewSigner(jwt.HS256, os.Getenv("ACCESS_TOKEN_SECRET"), 24*time.Hour)
 	refreshTokenSigner := jwt.NewSigner(jwt.HS256, os.Getenv("REFRSEH_TOKEN_SECRET"), 365*24*time.Hour)
 
@@ -22,7 +23,8 @@ func CreateToken(id uint) (*jwt.TokenPair, error) {
 	refreshClaims := jwt.Claims{Subject: userID}
 
 	accessClaims := AccessToken{
-		ID: id,
+		ID:   id,
+		ROLE: role,
 	}
 
 	accessToken, err := accessTokenSinger.Sign(accessClaims)
@@ -52,6 +54,16 @@ func RefreshToken(ctx iris.Context) {
 	token := jwt.GetVerifiedToken(ctx)
 	tokenStr := string(token.Token)
 
+	var claims AccessToken
+	claimsErr := token.Claims(&claims)
+	if claimsErr != nil {
+		CreateInternalServerError(ctx)
+		return
+	}
+
+	// Extract the role from the claims
+	originalRole := claims.ROLE
+
 	validateToken, tokenErr := storage.Redis.Get(bgContext, tokenStr).Result()
 
 	if tokenErr != nil {
@@ -73,7 +85,7 @@ func RefreshToken(ctx iris.Context) {
 		return
 	}
 
-	tokenPair, tokenPairErr := CreateToken(uint(userID))
+	tokenPair, tokenPairErr := CreateToken(uint(userID), originalRole)
 
 	if tokenPairErr != nil {
 		CreateInternalServerError(ctx)
@@ -87,7 +99,8 @@ func RefreshToken(ctx iris.Context) {
 }
 
 type AccessToken struct {
-	ID uint `json:"ID"`
+	ID   uint           `json:"ID"`
+	ROLE model.UserRole `json:"ROLE"`
 }
 
 type RefreshTokenInput struct {
