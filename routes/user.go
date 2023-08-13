@@ -91,6 +91,7 @@ func Register(ctx iris.Context) {
 		Email:       strings.ToLower(userInput.Email),
 		Password:    hashedPassword,
 		SocialLogin: false,
+		Role:        model.RoleUser,
 	}
 
 	storage.DB.Create(&existUser)
@@ -100,6 +101,7 @@ func Register(ctx iris.Context) {
 		"FIRSTNAME": existUser.FirstName,
 		"LASTNAME":  existUser.LastName,
 		"EMAIL":     existUser.Email,
+		"ROLE":      existUser.Role,
 	})
 
 }
@@ -130,10 +132,11 @@ func HashPassword(password string) (hashedPassword string, err error) {
 }
 
 type RegisterUser struct {
-	FirstName string `json:"firstName" validate:"required,max=265"`
-	LastName  string `json:"lastName" validate:"required,max=265"`
-	Email     string `json:"email" validate:"email,required,max=265"`
-	Password  string `json:"password" validate:"required,min=6,max=265"`
+	FirstName string         `json:"firstName" validate:"required,max=265"`
+	LastName  string         `json:"lastName" validate:"required,max=265"`
+	Email     string         `json:"email" validate:"email,required,max=265"`
+	Password  string         `json:"password" validate:"required,min=6,max=265"`
+	Role      model.UserRole `json:"role" validate:"required" oneof:"user admin guest landlords"`
 }
 
 type LoginUserInput struct {
