@@ -20,7 +20,7 @@ func RoleMiddleware(roles ...string) iris.Handler {
 		}
 
 		for _, role := range roles {
-			if claims.ROLE == role {
+			if string(claims.ROLE) == role {
 				ctx.Next()
 				return
 			}
