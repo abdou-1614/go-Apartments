@@ -54,6 +54,7 @@ func main() {
 	{
 		user.Post("/register", routes.Register)
 		user.Post("/login", routes.Login)
+		user.Post("/forgetpassword", routes.ForgetPassword)
 	}
 
 	app.Post("/api/refresh", refreshTokenVerifierMiddleware, utils.RefreshToken)
