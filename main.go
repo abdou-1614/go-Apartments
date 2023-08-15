@@ -46,7 +46,7 @@ func main() {
 
 	{
 		location.Get("/autocomplete", routes.AutoComplete)
-		location.Get("/search", routes.Search)
+		location.Get("/search", accessTokenVerifierMiddleware, routes.Search)
 	}
 
 	user := app.Party("api/user")
