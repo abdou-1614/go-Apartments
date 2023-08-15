@@ -14,6 +14,23 @@ import (
 
 var bgContext = context.Background()
 
+func CreateForgetPasswordToken(id uint, email string) (string, error) {
+	signer := jwt.NewSigner(jwt.HS256, os.Getenv("EMAIL_SECRET_TOKEN"), 10*time.Minute)
+
+	claims := ForgetPasswordToken{
+		ID:    id,
+		Email: email,
+	}
+
+	token, err := signer.Sign(claims)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(token), nil
+}
+
 func CreateToken(id uint, role model.UserRole) (*jwt.TokenPair, error) {
 	accessTokenSinger := jwt.NewSigner(jwt.HS256, os.Getenv("ACCESS_TOKEN_SECRET"), 24*time.Hour)
 	refreshTokenSigner := jwt.NewSigner(jwt.HS256, os.Getenv("REFRSEH_TOKEN_SECRET"), 365*24*time.Hour)
@@ -105,4 +122,9 @@ type AccessToken struct {
 
 type RefreshTokenInput struct {
 	RefreshToken string `json:"refreshToken" validate:"required"`
+}
+
+type ForgetPasswordToken struct {
+	ID    uint   `json:"ID"`
+	Email string `json:"email"`
 }
