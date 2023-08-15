@@ -106,6 +106,71 @@ func Register(ctx iris.Context) {
 
 }
 
+func ForgetPassword(ctx iris.Context) {
+	var emailInput EmailRegisteredInput
+	err := ctx.JSON(&emailInput)
+
+	if err != nil {
+		utils.HandleValidationError(err, ctx)
+		return
+	}
+
+	var userModel model.User
+
+	userExist, userExistErr := HandleUserExits(&userModel, emailInput.Email)
+
+	if userExistErr != nil {
+		utils.CreateInternalServerError(ctx)
+		return
+	}
+
+	if !userExist {
+		utils.CreateError(iris.StatusBadRequest, "Invalid Credentials", "Invalid Email", ctx)
+		return
+	}
+
+	if userExist {
+		if userModel.SocialLogin {
+			utils.CreateError(iris.StatusBadRequest, "Credentials Error", "Social Login Account", ctx)
+			return
+		}
+		link := "expo://localhost:19000/../resetpassword"
+		token, tokenErr := utils.CreateForgetPasswordToken(userModel.ID, userModel.Email)
+
+		if tokenErr != nil {
+			utils.CreateInternalServerError(ctx)
+			return
+		}
+
+		link += token
+
+		subject := "Forget Your Password "
+
+		html := `
+			<p>Its Look Like You Forget Your Password.
+			please click in link below to rest it.
+			please rest your password within 10 minutes. otherwise you will have to repeat this
+			process.<a href=` + link + `>click Here to rest password</a>
+			</p>
+		`
+		emailSent, emailSentErr := utils.SendMail(userModel.Email, subject, html)
+
+		if emailSentErr != nil {
+			utils.CreateInternalServerError(ctx)
+			return
+		}
+
+		if emailSent {
+			ctx.JSON(iris.Map{
+				"emailSent": true,
+			})
+			return
+		}
+
+		ctx.JSON(iris.Map{"emailSent": false})
+	}
+}
+
 func HandleUserExits(user *model.User, email string) (exists bool, err error) {
 	userExistQuery := storage.DB.Where("email = ?", strings.ToLower(email)).Limit(1).Find(&user)
 
@@ -129,6 +194,10 @@ func HashPassword(password string) (hashedPassword string, err error) {
 		return "", err
 	}
 	return string(bytes), nil
+}
+
+type EmailRegisteredInput struct {
+	Email string `json:"email" validate:"required"`
 }
 
 type RegisterUser struct {
