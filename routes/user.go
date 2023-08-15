@@ -8,6 +8,7 @@ import (
 	"go-appointement/utils"
 
 	"github.com/kataras/iris/v12"
+	jsonWt "github.com/kataras/iris/v12/middleware/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -171,6 +172,30 @@ func ForgetPassword(ctx iris.Context) {
 	}
 }
 
+func RestPassword(ctx iris.Context) {
+	var passwordInput RestPaswordInput
+	err := ctx.JSON(&passwordInput)
+
+	if err != nil {
+		utils.HandleValidationError(err, ctx)
+		return
+	}
+
+	hashedPassword, hashedPasswordErr := HashPassword(passwordInput.Password)
+
+	if hashedPasswordErr != nil {
+		utils.CreateInternalServerError(ctx)
+		return
+	}
+
+	claims := jsonWt.Get(ctx).(*utils.ForgetPasswordToken)
+	var user model.User
+
+	storage.DB.Model(&user).Where("id = ?", claims.ID).Update("password", hashedPassword)
+
+	ctx.JSON(iris.Map{"passwordRest": true})
+}
+
 func HandleUserExits(user *model.User, email string) (exists bool, err error) {
 	userExistQuery := storage.DB.Where("email = ?", strings.ToLower(email)).Limit(1).Find(&user)
 
@@ -210,5 +235,9 @@ type RegisterUser struct {
 
 type LoginUserInput struct {
 	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+type RestPaswordInput struct {
 	Password string `json:"password" validate:"required"`
 }
