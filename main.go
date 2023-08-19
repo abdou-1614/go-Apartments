@@ -20,6 +20,12 @@ func main() {
 
 	app.Validator = validator.New()
 
+	resetTokenVerifyer := jwt.NewVerifier(jwt.HS256, []byte(os.Getenv("EMAIL_SECRET_TOKEN")))
+	resetTokenVerifyer.WithDefaultBlocklist()
+	resetTokenMiddleware := resetTokenVerifyer.Verify(func() interface{} {
+		return new(utils.ForgetPasswordToken)
+	})
+
 	accessTokenVerifier := jwt.NewVerifier(jwt.HS256, os.Getenv("ACCESS_TOKEN_SECRET"))
 	accessTokenVerifier.WithDefaultBlocklist()
 	accessTokenVerifierMiddleware := accessTokenVerifier.Verify(func() interface{} {
@@ -55,6 +61,7 @@ func main() {
 		user.Post("/register", routes.Register)
 		user.Post("/login", routes.Login)
 		user.Post("/forgetpassword", routes.ForgetPassword)
+		user.Post("/restpassword", resetTokenMiddleware, routes.RestPassword)
 	}
 
 	app.Post("/api/refresh", refreshTokenVerifierMiddleware, utils.RefreshToken)
