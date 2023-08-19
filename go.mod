@@ -5,6 +5,11 @@ go 1.20
 require gorm.io/driver/postgres v1.5.2
 
 require (
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
+	gorm.io/driver/mysql v1.4.7 // indirect
+)
+
+require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/CloudyKit/fastprinter v0.0.0-20200109182630-33d98a066a53 // indirect
 	github.com/CloudyKit/jet/v6 v6.2.0 // indirect
@@ -64,5 +69,6 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/datatypes v1.2.0
 	gorm.io/gorm v1.25.2 // indirect
 )
