@@ -8,7 +8,7 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-func CreatePropert(ctx iris.Context) {
+func CreateProperty(ctx iris.Context) {
 	var propertyInput PropertyInput
 	err := ctx.ReadJSON(&propertyInput)
 
