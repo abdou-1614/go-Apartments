@@ -64,6 +64,13 @@ func main() {
 		user.Post("/restpassword", resetTokenMiddleware, routes.RestPassword)
 	}
 
+	property := app.Party("api/property")
+
+	{
+		property.Post("/create", routes.CreateProperty)
+		property.Get("/{id}", routes.GetProperty)
+	}
+
 	app.Post("/api/refresh", refreshTokenVerifierMiddleware, utils.RefreshToken)
 
 	app.Listen(":8080")
