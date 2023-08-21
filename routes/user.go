@@ -31,12 +31,12 @@ func Login(ctx iris.Context) {
 		return
 	}
 
-	if userExist == false {
+	if !userExist {
 		utils.CreateError(iris.StatusUnauthorized, "Credentials Error", "Invalid Email Or Password", ctx)
 		return
 	}
 
-	if existUser.SocialLogin == true {
+	if existUser.SocialLogin {
 		utils.CreateError(iris.StatusUnauthorized, "Credentials Error", "Social Login Account", ctx)
 		return
 	}
@@ -47,12 +47,8 @@ func Login(ctx iris.Context) {
 		utils.CreateError(iris.StatusUnauthorized, "Credentials Error", "Invalid Email Or Password", ctx)
 		return
 	}
-	ctx.JSON(iris.Map{
-		"ID":        existUser.ID,
-		"FIRSTNAME": existUser.FirstName,
-		"LASTNAME":  existUser.LastName,
-		"EMAIL":     existUser.Email,
-	})
+
+	returnUser(existUser, ctx)
 }
 
 func Register(ctx iris.Context) {
@@ -219,6 +215,25 @@ func HashPassword(password string) (hashedPassword string, err error) {
 		return "", err
 	}
 	return string(bytes), nil
+}
+
+func returnUser(user model.User, ctx iris.Context) {
+	tokenPair, tokenPairErr := utils.CreateToken(user.ID, user.Role)
+
+	if tokenPairErr != nil {
+		utils.CreateInternalServerError(ctx)
+		return
+	}
+
+	ctx.JSON(iris.Map{
+		"ID":           user.ID,
+		"FIRSTNAME":    user.FirstName,
+		"LASTNAME":     user.LastName,
+		"EMAIL":        user.Email,
+		"ROLE":         user.Role,
+		"accessToken":  string(tokenPair.AccessToken),
+		"refreshToken": string(tokenPair.RefreshToken),
+	})
 }
 
 type EmailRegisteredInput struct {
