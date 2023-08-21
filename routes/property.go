@@ -1,8 +1,92 @@
 package routes
 
-import "github.com/kataras/iris/v12"
+import (
+	"go-appointement/model"
+	"go-appointement/storage"
+	"go-appointement/utils"
 
-func CreatePropert(ctx iris.Context) {}
+	"github.com/kataras/iris/v12"
+)
+
+func CreatePropert(ctx iris.Context) {
+	var propertyInput PropertyInput
+	err := ctx.ReadJSON(&propertyInput)
+
+	if err != nil {
+		utils.HandleValidationError(err, ctx)
+		return
+	}
+
+	var appartements []model.Appartements
+	bedroomsLow := 0
+	bedroomsHigh := 0
+	var bathroomsLow float32 = 0.5
+	var bathroomsHigh float32 = 0.5
+
+	for _, element := range propertyInput.Appartements {
+		if element.Bathrooms < bathroomsLow {
+			bathroomsLow = element.Bathrooms
+		}
+
+		if element.Bathrooms > bathroomsHigh {
+			bathroomsHigh = element.Bathrooms
+		}
+
+		if *element.Bedrooms < bedroomsLow {
+			bedroomsLow = *element.Bedrooms
+		}
+
+		if *element.Bedrooms > bedroomsHigh {
+			bedroomsHigh = *element.Bedrooms
+		}
+
+		appartements = append(appartements, model.Appartements{
+			Unit:      element.Unit,
+			Bedrooms:  *element.Bedrooms,
+			Bathrooms: element.Bathrooms,
+		})
+	}
+	property := model.Property{
+		UnitType:     propertyInput.UnitType,
+		PropertyType: propertyInput.PropertType,
+		Street:       propertyInput.Street,
+		City:         propertyInput.City,
+		State:        propertyInput.State,
+		Zip:          propertyInput.Zip,
+		Lat:          propertyInput.Lat,
+		Lng:          propertyInput.Lng,
+		BedroomLow:   bedroomsLow,
+		BedroomHigh:  bedroomsHigh,
+		BathroomLow:  bathroomsLow,
+		BathroomHigh: bathroomsHigh,
+		Apartments:   appartements,
+	}
+
+	storage.DB.Create(&property)
+	ctx.JSON(property)
+}
+
+func GetProperty(ctx iris.Context) {
+	params := ctx.Params()
+	id := params.Get("id")
+
+	var property model.Property
+
+	propertyExist := storage.DB.Preload("Apartments").Find(&property, id)
+
+	if propertyExist.Error != nil {
+		utils.CreateError(iris.StatusInternalServerError, "Error", propertyExist.Error.Error(), ctx)
+		return
+	}
+
+	if propertyExist.RowsAffected == 0 {
+		utils.CreateError(iris.StatusNotFound, "Property Not Exist", "Property Not Exist", ctx)
+		return
+	}
+
+	ctx.JSON(property)
+
+}
 
 type PropertyInput struct {
 	UnitType     string             `json:"unitType" validate:"required, oneof= single multiple"`
@@ -19,6 +103,6 @@ type PropertyInput struct {
 
 type AppartementInput struct {
 	Unit      string  `json:"unit" validate:"required max=256"`
-	Badrooms  *int    `json:"badroom" validate:"required, gte=0, max=6"`
+	Bedrooms  *int    `json:"bedroom" validate:"required, gte=0, max=6"`
 	Bathrooms float32 `json:"bathrooms" validate:"min=0.5, max=6.5, required"`
 }
