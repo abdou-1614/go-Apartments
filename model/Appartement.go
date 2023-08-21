@@ -11,7 +11,7 @@ type Appartements struct {
 	gorm.Model
 	PropertyID  string         `json:"propertyID"`
 	Unit        string         `json:"unit"`
-	Badrooms    int            `json:"badrooms"`
+	Bedrooms    int            `json:"bedrooms"`
 	Bathrooms   float32        `json:"bathrooms"`
 	SqFt        int            `json:"sqFt"`
 	Rent        float32        `json:"rent"`
