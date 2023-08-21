@@ -36,6 +36,7 @@ func performMigration(db *gorm.DB) {
 	db.AutoMigrate(
 		&model.User{},
 		&model.Appartements{},
+		&model.Property{},
 	)
 }
 
