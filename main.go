@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go-appointement/model"
 	"go-appointement/routes"
 	"go-appointement/storage"
 	"go-appointement/utils"
@@ -67,7 +68,7 @@ func main() {
 	property := app.Party("api/property")
 
 	{
-		property.Post("/create", routes.CreateProperty)
+		property.Post("/create", accessTokenVerifierMiddleware, utils.RoleMiddleware(string(model.RoleLandlords)), routes.CreateProperty)
 		property.Get("/{id}", routes.GetProperty)
 	}
 
