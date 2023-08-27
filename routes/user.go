@@ -105,7 +105,7 @@ func Register(ctx iris.Context) {
 
 func ForgetPassword(ctx iris.Context) {
 	var emailInput EmailRegisteredInput
-	err := ctx.JSON(&emailInput)
+	err := ctx.ReadJSON(&emailInput)
 
 	if err != nil {
 		utils.HandleValidationError(err, ctx)
@@ -170,7 +170,7 @@ func ForgetPassword(ctx iris.Context) {
 
 func RestPassword(ctx iris.Context) {
 	var passwordInput RestPaswordInput
-	err := ctx.JSON(&passwordInput)
+	err := ctx.ReadJSON(&passwordInput)
 
 	if err != nil {
 		utils.HandleValidationError(err, ctx)
