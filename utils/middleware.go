@@ -25,6 +25,9 @@ func RoleMiddleware(roles ...string) iris.Handler {
 				return
 			}
 		}
-		ctx.StatusCode(iris.StatusForbidden)
+		ctx.JSON(iris.Map{
+			"Message": "Invalid Role",
+			"STATUS":  iris.StatusUnauthorized,
+		})
 	}
 }
