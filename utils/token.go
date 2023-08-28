@@ -95,7 +95,7 @@ func RefreshToken(ctx iris.Context) {
 
 	storage.Redis.Del(bgContext, tokenStr)
 
-	userID, parseID := strconv.ParseUint(token.StandardClaims.Subject, 10, 12)
+	userID, parseID := strconv.ParseUint(token.StandardClaims.Subject, 10, 32)
 
 	if parseID != nil {
 		CreateInternalServerError(ctx)
