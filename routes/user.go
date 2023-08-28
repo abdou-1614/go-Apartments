@@ -15,7 +15,7 @@ import (
 func Login(ctx iris.Context) {
 	var userInput LoginUserInput
 
-	err := ctx.JSON(&userInput)
+	err := ctx.ReadJSON(&userInput)
 
 	if err != nil {
 		utils.HandleValidationError(err, ctx)
@@ -70,7 +70,7 @@ func Register(ctx iris.Context) {
 		return
 	}
 
-	if userExist == true {
+	if userExist {
 		utils.CreateError(iris.StatusConflict, "Conflict", "User Already Exist", ctx)
 		return
 	}
@@ -201,7 +201,7 @@ func HandleUserExits(user *model.User, email string) (exists bool, err error) {
 
 	userExist := userExistQuery.RowsAffected > 0
 
-	if userExist == true {
+	if userExist {
 		return true, nil
 	}
 
