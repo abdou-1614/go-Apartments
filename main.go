@@ -68,7 +68,7 @@ func main() {
 	property := app.Party("api/property")
 
 	{
-		property.Post("/create", accessTokenVerifierMiddleware, utils.RoleMiddleware(string(model.RoleLandlords)), routes.CreateProperty)
+		property.Post("/create", accessTokenVerifierMiddleware, utils.RoleMiddleware(string(model.RoleLandlords), string(model.RoleAdmin)), routes.CreateProperty)
 		property.Get("/{id}", routes.GetProperty)
 	}
 
