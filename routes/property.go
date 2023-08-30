@@ -17,13 +17,13 @@ func CreateProperty(ctx iris.Context) {
 		return
 	}
 
-	var appartements []model.Appartements
+	var appartements []model.Apartments
 	bedroomsLow := 0
 	bedroomsHigh := 0
 	var bathroomsLow float32 = 0.5
 	var bathroomsHigh float32 = 0.5
 
-	for _, element := range propertyInput.Appartements {
+	for _, element := range propertyInput.Apartments {
 		if element.Bathrooms < bathroomsLow {
 			bathroomsLow = element.Bathrooms
 		}
@@ -40,7 +40,7 @@ func CreateProperty(ctx iris.Context) {
 			bedroomsHigh = *element.Bedrooms
 		}
 
-		appartements = append(appartements, model.Appartements{
+		appartements = append(appartements, model.Apartments{
 			Unit:      element.Unit,
 			Bedrooms:  *element.Bedrooms,
 			Bathrooms: element.Bathrooms,
@@ -60,6 +60,7 @@ func CreateProperty(ctx iris.Context) {
 		BathroomLow:  bathroomsLow,
 		BathroomHigh: bathroomsHigh,
 		Apartments:   appartements,
+		UserID:       propertyInput.UserID,
 	}
 
 	storage.DB.Create(&property)
@@ -89,19 +90,19 @@ func GetProperty(ctx iris.Context) {
 }
 
 type PropertyInput struct {
-	UnitType     string             `json:"unitType" validate:"required, oneof= single multiple"`
-	PropertType  string             `json:"propertyType" validate:"required, max=256"`
-	Street       string             `json:"street" validate:"required, max=512"`
-	City         string             `json:"city" validate:"required, max=256"`
-	State        string             `json:"state" validate:"required, max=256"`
-	Zip          int                `json:"zip" validate:"required"`
-	Lat          float32            `json:"lat" validate:"required"`
-	Lng          float32            `json:"lng" validate:"required"`
-	ManagerID    uint               `json:"managerID" validate:"required"`
-	Appartements []AppartementInput `json:"appartements" validate:"required, dive"`
+	UnitType    string            `json:"unitType" validate:"required,oneof=single multiple"`
+	PropertType string            `json:"propertyType" validate:"required,max=256"`
+	Street      string            `json:"street" validate:"required,max=512"`
+	City        string            `json:"city" validate:"required,max=256"`
+	State       string            `json:"state" validate:"required,max=256"`
+	Zip         int               `json:"zip" validate:"required"`
+	Lat         float32           `json:"lat" validate:"required"`
+	Lng         float32           `json:"lng" validate:"required"`
+	UserID      uint              `json:"userID" validate:"required"`
+	Apartments  []ApartmentsInput `json:"appartements" validate:"required,dive"`
 }
 
-type AppartementInput struct {
+type ApartmentsInput struct {
 	Unit      string  `json:"unit" validate:"required max=256"`
 	Bedrooms  *int    `json:"bedroom" validate:"required, gte=0, max=6"`
 	Bathrooms float32 `json:"bathrooms" validate:"min=0.5, max=6.5, required"`
