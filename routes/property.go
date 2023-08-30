@@ -6,6 +6,7 @@ import (
 	"go-appointement/utils"
 
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/jwt"
 )
 
 func CreateProperty(ctx iris.Context) {
@@ -17,6 +18,12 @@ func CreateProperty(ctx iris.Context) {
 		return
 	}
 
+	claims := jwt.Get(ctx).(*utils.AccessToken)
+
+	if claims.ID != propertyInput.UserID {
+		utils.CreateError(iris.StatusBadRequest, "Not Owner", "Not Owner of Property", ctx)
+		return
+	}
 	var appartements []model.Apartments
 	bedroomsLow := 0
 	bedroomsHigh := 0
@@ -99,11 +106,11 @@ type PropertyInput struct {
 	Lat         float32           `json:"lat" validate:"required"`
 	Lng         float32           `json:"lng" validate:"required"`
 	UserID      uint              `json:"userID" validate:"required"`
-	Apartments  []ApartmentsInput `json:"appartements" validate:"required,dive"`
+	Apartments  []ApartmentsInput `json:"apartments" validate:"required,dive"`
 }
 
 type ApartmentsInput struct {
-	Unit      string  `json:"unit" validate:"required max=256"`
-	Bedrooms  *int    `json:"bedroom" validate:"required, gte=0, max=6"`
-	Bathrooms float32 `json:"bathrooms" validate:"min=0.5, max=6.5, required"`
+	Unit      string  `json:"unit" validate:"required,max=256"`
+	Bedrooms  *int    `json:"bedroom" validate:"required,gte=0,max=6"`
+	Bathrooms float32 `json:"bathrooms" validate:"min=0.5,max=6.5,required"`
 }
