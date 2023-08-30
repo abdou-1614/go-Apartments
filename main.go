@@ -27,13 +27,13 @@ func main() {
 		return new(utils.ForgetPasswordToken)
 	})
 
-	accessTokenVerifier := jwt.NewVerifier(jwt.HS256, os.Getenv("ACCESS_TOKEN_SECRET"))
+	accessTokenVerifier := jwt.NewVerifier(jwt.HS256, []byte(os.Getenv("ACCESS_TOKEN_SECRET")))
 	accessTokenVerifier.WithDefaultBlocklist()
 	accessTokenVerifierMiddleware := accessTokenVerifier.Verify(func() interface{} {
 		return new(utils.AccessToken)
 	})
 
-	refreshTokenVerifier := jwt.NewVerifier(jwt.HS256, os.Getenv("REFRESH_TOKEN_SECRET"))
+	refreshTokenVerifier := jwt.NewVerifier(jwt.HS256, []byte(os.Getenv("REFRESH_TOKEN_SECRET")))
 	refreshTokenVerifier.WithDefaultBlocklist()
 	refreshTokenVerifierMiddleware := refreshTokenVerifier.Verify(func() interface{} {
 		return new(jwt.Claims)
