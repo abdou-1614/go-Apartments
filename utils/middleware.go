@@ -17,9 +17,10 @@ func RoleMiddleware(roles ...string) iris.Handler {
 				return
 			}
 		}
-		ctx.JSON(iris.Map{
+		response := map[string]interface{}{
 			"MESSAGE": "ONLY Landlords and Admin can create Property",
 			"STATUS":  iris.StatusForbidden,
-		})
+		}
+		ctx.JSON(response)
 	}
 }
