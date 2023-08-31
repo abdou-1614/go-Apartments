@@ -70,6 +70,7 @@ func main() {
 	{
 		property.Post("/create", accessTokenVerifierMiddleware, utils.RoleMiddleware(string(model.RoleLandlords), string(model.RoleAdmin)), routes.CreateProperty)
 		property.Get("/{id}", routes.GetProperty)
+		property.Delete("/delete/{id}", accessTokenVerifierMiddleware, routes.DeleteProperty)
 	}
 
 	app.Post("/api/refresh", refreshTokenVerifierMiddleware, utils.RefreshToken)
