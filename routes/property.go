@@ -96,6 +96,39 @@ func GetProperty(ctx iris.Context) {
 
 }
 
+func DeleteProperty(ctx iris.Context) {
+	params := ctx.Params()
+	id := params.Get("id")
+
+	claims := jwt.Get(ctx).(*utils.AccessToken)
+
+	var propertyModel model.Property
+
+	if claims.ROLE == model.RoleAdmin {
+		propertyDelete := storage.DB.Delete(&propertyModel, id)
+		if propertyDelete.Error != nil {
+			utils.CreateError(iris.StatusInternalServerError, "ERROR", propertyDelete.Error.Error(), ctx)
+			return
+		}
+		ctx.JSON(iris.StatusNoContent)
+		return
+	}
+
+	if claims.ID != propertyModel.UserID {
+		utils.CreateError(iris.StatusForbidden, "NOT OWNER", "CAN'T DELETE PROPERTY", ctx)
+		return
+	}
+
+	propertyDelete := storage.DB.Delete(propertyModel, id)
+
+	if propertyDelete.Error != nil {
+		utils.CreateError(iris.StatusInternalServerError, "Error", propertyDelete.Error.Error(), ctx)
+		return
+	}
+
+	ctx.JSON(iris.StatusNoContent)
+}
+
 type PropertyInput struct {
 	UnitType    string            `json:"unitType" validate:"required,oneof=single multiple"`
 	PropertType string            `json:"propertyType" validate:"required,max=256"`
