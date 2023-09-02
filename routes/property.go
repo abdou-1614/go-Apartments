@@ -1,12 +1,18 @@
 package routes
 
 import (
+	"encoding/json"
 	"go-appointement/model"
 	"go-appointement/storage"
 	"go-appointement/utils"
+	"strings"
+	"time"
+
+	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/jwt"
+	"github.com/thanhpk/randstr"
 )
 
 func CreateProperty(ctx iris.Context) {
@@ -129,6 +135,188 @@ func DeleteProperty(ctx iris.Context) {
 	ctx.JSON(iris.StatusNoContent)
 }
 
+func UpdateProperty(ctx iris.Context) {
+	params := ctx.Params()
+	id := params.Get("id")
+
+	var property model.Property
+
+	propertyExist := storage.DB.Preload("Apartments").Find(&property, id)
+
+	if propertyExist.Error != nil {
+		utils.CreateError(iris.StatusInternalServerError, "ERROR", propertyExist.Error.Error(), ctx)
+		return
+	}
+
+	var propertyInput UpdatePropertyInput
+
+	err := ctx.ReadJSON(&propertyInput)
+
+	if err != nil {
+		utils.HandleValidationError(err, ctx)
+		return
+	}
+
+	var newApartments []model.Apartments
+	var newApartmentsImages []*[]string
+	bedRoomsLow := property.BedroomLow
+	bedRoomsHigh := property.BedroomHigh
+	var bathRoomsLow float32 = property.BathroomLow
+	var bathroomHigh float32 = property.BathroomHigh
+	var rentLow float32 = propertyInput.Apartments[0].Rent
+	var rentHigh float32 = propertyInput.Apartments[0].Rent
+
+	for _, apartement := range propertyInput.Apartments {
+		if apartement.Bathrooms < bathRoomsLow {
+			bathRoomsLow = apartement.Bathrooms
+		}
+
+		if apartement.Bathrooms > bathroomHigh {
+			bathroomHigh = apartement.Bathrooms
+		}
+
+		if *apartement.Bedrooms < bedRoomsLow {
+			bedRoomsLow = *apartement.Bedrooms
+		}
+
+		if *apartement.Bedrooms > bedRoomsHigh {
+			bedRoomsHigh = *apartement.Bedrooms
+		}
+
+		if apartement.Rent < rentLow {
+			rentLow = apartement.Rent
+		}
+
+		if apartement.Rent > rentHigh {
+			rentHigh = apartement.Rent
+		}
+
+		amenities, _ := json.Marshal(apartement.Amenities)
+
+		currApartement := model.Apartments{
+			Unit:        apartement.Unit,
+			Bedrooms:    *apartement.Bedrooms,
+			Bathrooms:   apartement.Bathrooms,
+			PropertyID:  property.ID,
+			SqFt:        apartement.SqFt,
+			Rent:        apartement.Rent,
+			Deposit:     *apartement.Deposit,
+			LeaseLength: apartement.LeaseLength,
+			AvailableOn: apartement.AvailableOn,
+			Active:      apartement.Active,
+			Amenities:   amenities,
+			Description: apartement.Description,
+		}
+		if apartement.ID != nil {
+			currApartement.ID = *apartement.ID
+			UpdateApartmentsAndImage(currApartement, apartement.Images)
+		} else {
+			newApartments = append(newApartments, currApartement)
+			newApartmentsImages = append(newApartmentsImages, &apartement.Images)
+		}
+	}
+	storage.DB.Create(&newApartments)
+
+	for index, apartement := range newApartments {
+		if len(*newApartmentsImages[index]) > 0 {
+			UpdateApartmentsAndImage(apartement, *newApartmentsImages[index])
+		}
+	}
+	propertyAmenities, _ := json.Marshal(propertyInput.Amenities)
+	includedUtilities, _ := json.Marshal(propertyInput.IncludedUtilities)
+
+	property.UnitType = propertyInput.UnitType
+	property.Description = propertyInput.Description
+	property.IncludedUtilities = includedUtilities
+	property.PetsAllowed = propertyInput.PetsAllowed
+	property.LaundryType = propertyInput.LaundryType
+	property.ParkingFee = *propertyInput.ParkingFee
+	property.Amenities = propertyAmenities
+	property.Name = propertyInput.Name
+	property.FirstName = propertyInput.FirstName
+	property.LastName = propertyInput.LastName
+	property.Email = propertyInput.Email
+	property.CallingCode = propertyInput.CallingCode
+	property.CountryCode = propertyInput.CountryCode
+	property.PhoneNumber = propertyInput.PhoneNumber
+	property.Website = propertyInput.Website
+	property.OnMarket = propertyInput.OnMarket
+	property.BathroomHigh = bathroomHigh
+	property.BathroomLow = bathRoomsLow
+	property.BedroomLow = bedRoomsLow
+	property.BedroomLow = bedRoomsHigh
+	property.RentLow = rentLow
+	property.RentHigh = rentHigh
+
+	imagesArr := insertImages(InsertImages{
+		images:     propertyInput.Images,
+		propertyID: strconv.FormatUint(uint64(property.ID), 10),
+	})
+
+	imageJson, _ := json.Marshal(imagesArr)
+
+	property.Images = imageJson
+
+	rowsUpdated := storage.DB.Model(&property).Updates(property)
+
+	if rowsUpdated.Error != nil {
+		utils.CreateError(iris.StatusInternalServerError, "ERROR", rowsUpdated.Error.Error(), ctx)
+		return
+	}
+
+	response := map[string]interface{}{
+		"MESSAGE":     "UPDATED SUCCCESS",
+		"STATUS CODE": iris.StatusOK,
+	}
+
+	ctx.JSON(response)
+}
+
+func UpdateApartmentsAndImage(apartment model.Apartments, images []string) {
+	apartmentID := strconv.FormatUint(uint64(apartment.ID), 10)
+
+	apartmentImage := insertImages(InsertImages{
+		images:      images,
+		propertyID:  strconv.FormatUint(uint64(apartment.PropertyID), 10),
+		apartmentID: &apartmentID,
+	})
+
+	if len(apartmentImage) > 0 {
+		imageJson, _ := json.Marshal(apartmentImage)
+		apartment.Images = imageJson
+	}
+
+	storage.DB.Model(&apartment).Updates(apartment)
+}
+
+func insertImages(arg InsertImages) []string {
+	var imagesArr []string
+
+	for _, image := range arg.images {
+		if !strings.Contains(image, storage.BucketName) {
+			imageID := randstr.Hex(16)
+			imageStr := "property/" + arg.propertyID
+			if arg.apartmentID != nil {
+				imageStr += "/apartment/" + *arg.apartmentID
+			}
+			imageStr += "/" + imageID
+
+			urlMap := storage.UploadBaseImage(image, imageStr)
+			imagesArr = append(imagesArr, urlMap["url"])
+		} else {
+			imagesArr = append(imagesArr, image)
+		}
+	}
+
+	return imagesArr
+}
+
+type InsertImages struct {
+	images      []string
+	propertyID  string
+	apartmentID *string
+}
+
 type PropertyInput struct {
 	UnitType    string            `json:"unitType" validate:"required,oneof=single multiple"`
 	PropertType string            `json:"propertyType" validate:"required,max=256"`
@@ -140,6 +328,43 @@ type PropertyInput struct {
 	Lng         float32           `json:"lng" validate:"required"`
 	UserID      uint              `json:"userID" validate:"required"`
 	Apartments  []ApartmentsInput `json:"apartments" validate:"required,dive"`
+}
+
+type UpdatePropertyInput struct {
+	UnitType          string                  `json:"unitType" validate:"required,oneof=single multiple"`
+	Description       string                  `json:"description"`
+	Images            []string                `json:"images"`
+	IncludedUtilities []string                `json:"includedUtilities"`
+	PetsAllowed       string                  `json:"petsAllowed" validate:"required"`
+	LaundryType       string                  `json:"laundryType" validate:"required"`
+	ParkingFee        *float32                `json:"parkingFee"`
+	Amenities         []string                `json:"amenities"`
+	Name              string                  `json:"name"`
+	FirstName         string                  `json:"firstName"`
+	LastName          string                  `json:"lastName"`
+	Email             string                  `json:"email" validate:"required,email"`
+	CallingCode       string                  `json:"callingCode"`
+	CountryCode       string                  `json:"countryCode"`
+	PhoneNumber       string                  `json:"phoneNumber" validate:"required"`
+	Website           string                  `json:"website" validate:"omitempty,url"`
+	OnMarket          *bool                   `json:"onMarket" validate:"required"`
+	Apartments        []UpdateApartmentsInput `json:"apartments" validate:"required,dive"`
+}
+
+type UpdateApartmentsInput struct {
+	ID          *uint     `json:"ID"`
+	Unit        string    `json:"unit" validate:"required,max=256"`
+	Bedrooms    *int      `json:"bedroom" validate:"required,gte=0,max=6"`
+	Bathrooms   float32   `json:"bathrooms" validate:"min=0.5,max=6.5,required"`
+	SqFt        int       `json:"sqFt" validate:"max=100000000000,required"`
+	Rent        float32   `json:"rent" validate:"required"`
+	Deposit     *float32  `json:"deposit" validate:"required"`
+	LeaseLength string    `json:"leaseLength" validate:"required,max=256"`
+	AvailableOn time.Time `json:"availableOn" validate:"required"`
+	Active      *bool     `json:"active" validate:"required"`
+	Images      []string  `json:"images"`
+	Amenities   []string  `json:"amenities"`
+	Description string    `json:"description"`
 }
 
 type ApartmentsInput struct {
