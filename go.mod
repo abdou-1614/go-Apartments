@@ -23,6 +23,7 @@ require (
 	github.com/aws/smithy-go v1.14.2 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/thanhpk/randstr v1.0.6 // indirect
 	gorm.io/driver/mysql v1.4.7 // indirect
 )
 
