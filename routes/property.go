@@ -279,6 +279,35 @@ func UpdateProperty(ctx iris.Context) {
 	ctx.JSON(response)
 }
 
+func GetAllProperty(ctx iris.Context) {
+	var query PaginationQuery
+
+	if err := ctx.ReadQuery(&query); err != nil {
+		utils.HandleValidationError(err, ctx)
+	}
+
+	offSet := (query.Page - 1) * query.PerPage
+
+	var property []model.Property
+
+	if err := storage.DB.Offset(offSet).Limit(query.PerPage).Find(&property).Error; err != nil {
+		utils.CreateInternalServerError(ctx)
+		return
+	}
+
+	ctx.JSON(property)
+}
+
+func GetTopRatedPropert(ctx iris.Context) {
+	var property []model.Property
+
+	if err := storage.DB.Order("stars DESC").Limit(10).Find(&property).Error; err != nil {
+		utils.CreateInternalServerError(ctx)
+		return
+	}
+	ctx.JSON(property)
+}
+
 func UpdateApartmentsAndImage(apartment model.Apartments, images []string) {
 	apartmentID := strconv.FormatUint(uint64(apartment.ID), 10)
 
@@ -356,6 +385,11 @@ type UpdatePropertyInput struct {
 	Website           string                  `json:"website" validate:"omitempty,url"`
 	OnMarket          *bool                   `json:"onMarket" validate:"required"`
 	Apartments        []UpdateApartmentsInput `json:"apartments" validate:"required,dive"`
+}
+
+type PaginationQuery struct {
+	Page    int `json:"page" validate:"gte=1"`
+	PerPage int `json:"perPage" validate:"gte=1"`
 }
 
 type UpdateApartmentsInput struct {
