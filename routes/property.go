@@ -141,6 +141,13 @@ func UpdateProperty(ctx iris.Context) {
 
 	var property model.Property
 
+	claims := jwt.Get(ctx).(*utils.AccessToken)
+
+	if claims.ID != property.UserID {
+		utils.CreateError(iris.StatusForbidden, "NOT OWNER", "CAN'T UPDATE PROPERTY", ctx)
+		return
+	}
+
 	propertyExist := storage.DB.Preload("Apartments").Find(&property, id)
 
 	if propertyExist.Error != nil {
