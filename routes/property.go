@@ -286,6 +286,14 @@ func GetAllProperty(ctx iris.Context) {
 		utils.HandleValidationError(err, ctx)
 	}
 
+	if query.Page == 0 {
+		query.Page = 1
+	}
+
+	if query.PerPage == 0 {
+		query.PerPage = 20
+	}
+
 	offSet := (query.Page - 1) * query.PerPage
 
 	var property []model.Property
@@ -412,4 +420,17 @@ type ApartmentsInput struct {
 	Unit      string  `json:"unit" validate:"required,max=256"`
 	Bedrooms  *int    `json:"bedroom" validate:"required,gte=0,max=6"`
 	Bathrooms float32 `json:"bathrooms" validate:"min=0.5,max=6.5,required"`
+}
+
+type PropertyResponse struct {
+	ID           uint    `json:"id"`
+	UnitType     string  `json:"unitType"`
+	PropertyType string  `json:"propertyType"`
+	Street       string  `json:"street"`
+	City         string  `json:"city"`
+	State        string  `json:"state"`
+	Zip          int     `json:"zip"`
+	Lat          float32 `json:"lat"`
+	Lng          float32 `json:"lng"`
+	Stars        int     `json:"stars"`
 }
