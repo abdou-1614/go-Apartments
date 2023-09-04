@@ -72,7 +72,7 @@ func main() {
 		property.Post("/create", accessTokenVerifierMiddleware, utils.RoleMiddleware(string(model.RoleLandlords), string(model.RoleAdmin)), routes.CreateProperty)
 		property.Get("/{id}", routes.GetProperty)
 		property.Get("/all", routes.GetAllProperty)
-		property.Get("top-rated", routes.GetTopRatedPropert)
+		property.Get("/top-rated", routes.GetTopRatedPropert)
 		property.Delete("/delete/{id}", accessTokenVerifierMiddleware, routes.DeleteProperty)
 		property.Patch("/update/{id}", utils.RoleMiddleware(string(model.RoleLandlords), string(model.RoleAdmin)), routes.UpdateProperty)
 	}
