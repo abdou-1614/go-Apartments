@@ -7,11 +7,26 @@ import (
 	"go-appointement/utils"
 	"os"
 
+	_ "go-appointement/docs"
+
 	"github.com/go-playground/validator/v10"
+	"github.com/iris-contrib/swagger"
+	"github.com/iris-contrib/swagger/swaggerFiles"
 	"github.com/joho/godotenv"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/jwt"
 )
+
+// @title Swagger Example APARTEMENTS
+// @version 1.0
+// @description This is a sample server Petstore server.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+// @host localhost:8080
+// @BasePath /api
 
 func main() {
 	godotenv.Load()
@@ -78,6 +93,12 @@ func main() {
 	}
 
 	app.Post("/api/refresh", refreshTokenVerifierMiddleware, utils.RefreshToken)
+
+	swaggerUI := swagger.Handler(swaggerFiles.Handler)
+
+	// Register on http://localhost:8080/swagger
+	app.Get("/swagger", swaggerUI)
+	app.Get("/swagger/{any:path}", swaggerUI)
 
 	app.Listen(":8080")
 }
