@@ -306,6 +306,15 @@ func GetAllProperty(ctx iris.Context) {
 	ctx.JSON(property)
 }
 
+// GetTopRatedProperty
+// @Summary Get top-rated properties
+// @Description Retrieves the top-rated properties in descending order.
+// @Accept json
+// @Produce json
+// @Success 200 {array} PropertyResponse
+// @Tags Property
+// @Failure 500 "Internal Server Error"
+// @Router /getTop [get]
 func GetTopRatedPropert(ctx iris.Context) {
 	var property []model.Property
 
