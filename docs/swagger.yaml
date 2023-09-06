@@ -1,0 +1,118 @@
+basePath: /api
+definitions:
+  model.UserRole:
+    enum:
+    - admin
+    - user
+    - landlords
+    - guest
+    type: string
+    x-enum-varnames:
+    - RoleAdmin
+    - RoleUser
+    - RoleLandlords
+    - RoleGuest
+  routes.PropertyResponse:
+    properties:
+      city:
+        type: string
+      id:
+        type: integer
+      lat:
+        type: number
+      lng:
+        type: number
+      propertyType:
+        type: string
+      stars:
+        type: integer
+      state:
+        type: string
+      street:
+        type: string
+      unitType:
+        type: string
+      zip:
+        type: integer
+    type: object
+  routes.RegisterUser:
+    properties:
+      email:
+        maxLength: 265
+        type: string
+      firstName:
+        maxLength: 265
+        type: string
+      lastName:
+        maxLength: 265
+        type: string
+      password:
+        maxLength: 265
+        minLength: 6
+        type: string
+      role:
+        $ref: '#/definitions/model.UserRole'
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    - role
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server Petstore server.
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example APARTEMENTS
+  version: "1.0"
+paths:
+  /getTop:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the top-rated properties in descending order.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/routes.PropertyResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Get top-rated properties
+      tags:
+      - Property
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with the provided information.
+      parameters:
+      - description: User registration details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/routes.RegisterUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User registered successfully
+          schema:
+            $ref: '#/definitions/routes.RegisterUser'
+        "400":
+          description: Invalid input
+        "409":
+          description: User already exists
+      summary: Register a new user
+      tags:
+      - Users
+swagger: "2.0"
