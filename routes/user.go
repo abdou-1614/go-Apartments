@@ -51,6 +51,20 @@ func Login(ctx iris.Context) {
 	returnUser(existUser, ctx)
 }
 
+// Register registers a new user.
+//
+// This endpoint allows users to register a new account.
+//
+// @Summary Register a new user
+// @Description Register a new user with the provided information.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body RegisterUser true "User registration details"
+// @Success 201 {object} RegisterUser "User registered successfully"
+// @Failure 400 "Invalid input"
+// @Failure 409 "User already exists"
+// @Router /register [post]
 func Register(ctx iris.Context) {
 	var userInput RegisterUser
 
