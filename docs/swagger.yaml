@@ -70,6 +70,25 @@ info:
   title: Swagger Example APARTEMENTS
   version: "1.0"
 paths:
+  /getAllProperties:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves All properties.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/routes.PropertyResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+      summary: Get All properties
+      tags:
+      - Property
   /getTop:
     get:
       consumes:
