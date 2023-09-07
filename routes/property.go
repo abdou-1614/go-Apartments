@@ -279,6 +279,15 @@ func UpdateProperty(ctx iris.Context) {
 	ctx.JSON(response)
 }
 
+// GetAllProperty
+// @Summary Get All properties
+// @Description Retrieves All properties.
+// @Accept json
+// @Produce json
+// @Success 200 {array} PropertyResponse
+// @Tags Property
+// @Failure 500 "Internal Server Error"
+// @Router /getAllProperties [get]
 func GetAllProperty(ctx iris.Context) {
 	var query PaginationQuery
 
