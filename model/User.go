@@ -22,3 +22,18 @@ const (
 	RoleLandlords UserRole = "landlords"
 	RoleGuest     UserRole = "guest"
 )
+
+type RoleChangeRequest struct {
+	gorm.Model
+	UserID  uint          `json:"userID"`
+	NewRole UserRole      `json:"newRole"`
+	Status  RequestStatus `json:"status"`
+}
+
+type RequestStatus string
+
+const (
+	RequestPending  RequestStatus = "pending"
+	RequestAccepted RequestStatus = "accepted"
+	RequestRejected RequestStatus = "rejected"
+)
