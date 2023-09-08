@@ -28,6 +28,7 @@ type RoleChangeRequest struct {
 	UserID  uint          `json:"userID"`
 	NewRole UserRole      `json:"newRole"`
 	Status  RequestStatus `json:"status"`
+	User    User          `json:"user" gorm:"foreignkey:UserID"`
 }
 
 type RequestStatus string
