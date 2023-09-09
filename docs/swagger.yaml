@@ -1,5 +1,15 @@
 basePath: /api
 definitions:
+  model.RequestStatus:
+    enum:
+    - pending
+    - accepted
+    - rejected
+    type: string
+    x-enum-varnames:
+    - RequestPending
+    - RequestAccepted
+    - RequestRejected
   model.UserRole:
     enum:
     - admin
@@ -59,6 +69,26 @@ definitions:
     - password
     - role
     type: object
+  routes.RoleChangeRequest:
+    properties:
+      userID:
+        type: integer
+    required:
+    - userID
+    type: object
+  routes.RoleChangeRequestWithUser:
+    properties:
+      id:
+        type: integer
+      newRole:
+        $ref: '#/definitions/model.UserRole'
+      status:
+        $ref: '#/definitions/model.RequestStatus'
+      userID:
+        type: integer
+      userName:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -108,6 +138,27 @@ paths:
       summary: Get top-rated properties
       tags:
       - Property
+  /manage-role-requests:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves All user requests to change role.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/routes.RoleChangeRequestWithUser'
+            type: array
+        "403":
+          description: Only admins can manage role change requests
+        "500":
+          description: Internal Server Error
+      summary: Manage All users requests
+      tags:
+      - Users
   /register:
     post:
       consumes:
@@ -132,6 +183,30 @@ paths:
         "409":
           description: User already exists
       summary: Register a new user
+      tags:
+      - Users
+  /submit-role-change:
+    post:
+      consumes:
+      - application/json
+      description: Submit user request to change role.
+      parameters:
+      - description: User Submit
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/routes.RoleChangeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: THE REQUEST HAS BEEN SUBMITED SUCCESSFULLY
+        "400":
+          description: Invalid input
+        "500":
+          description: You can only request a role change for yourself
+      summary: Submit Change Role Request.
       tags:
       - Users
 swagger: "2.0"
