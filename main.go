@@ -79,6 +79,10 @@ func main() {
 		user.Post("/login", routes.Login)
 		user.Post("/forgetpassword", routes.ForgetPassword)
 		user.Post("/restpassword", resetTokenMiddleware, routes.RestPassword)
+		user.Post("/submit-role-change", accessTokenVerifierMiddleware, routes.SubmitRoleChangeRequest)
+		user.Get("/manage-role-requests", accessTokenVerifierMiddleware, utils.RoleMiddleware(string(model.RoleAdmin)), routes.ManageRoleChangeRequests)
+		user.Put("/accept-role-request/{id}", accessTokenVerifierMiddleware, utils.RoleMiddleware(string(model.RoleAdmin)), routes.AcceptRoleChangeRequest)
+		user.Put("/reject-role-request/{id}", accessTokenVerifierMiddleware, utils.RoleMiddleware(string(model.RoleAdmin)), routes.RejectRoleChangeRequest)
 	}
 
 	property := app.Party("api/property")
