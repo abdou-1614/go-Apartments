@@ -21,6 +21,7 @@ import (
 // @Success 200  "THE REQUEST HAS BEEN SUBMITED SUCCESSFULLY"
 // @Failure 400 "Invalid input"
 // @Failure 500 "You can only request a role change for yourself"
+// @Router /submit-role-change [post]
 func SubmitRoleChangeRequest(ctx iris.Context) {
 	var requestStatus RoleChangeRequest
 
@@ -54,6 +55,16 @@ func SubmitRoleChangeRequest(ctx iris.Context) {
 	ctx.JSON(response)
 }
 
+// ManageRoleChangeRequests
+// @Summary Manage All users requests
+// @Description Retrieves All user requests to change role.
+// @Accept json
+// @Produce json
+// @Success 200 {array} RoleChangeRequestWithUser
+// @Tags Users
+// @Failure 500 "Internal Server Error"
+// @Failure 403 "Only admins can manage role change requests"
+// @Router /manage-role-requests [get]
 func ManageRoleChangeRequests(ctx iris.Context) {
 	claims := jwt.Get(ctx).(*utils.AccessToken)
 
