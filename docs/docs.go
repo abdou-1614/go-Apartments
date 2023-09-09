@@ -78,6 +78,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/manage-role-requests": {
+            "get": {
+                "description": "Retrieves All user requests to change role.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Manage All users requests",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/routes.RoleChangeRequestWithUser"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Only admins can manage role change requests"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "Register a new user with the provided information.",
@@ -117,9 +149,59 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/submit-role-change": {
+            "post": {
+                "description": "Submit user request to change role.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Submit Change Role Request.",
+                "parameters": [
+                    {
+                        "description": "User Submit",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.RoleChangeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "THE REQUEST HAS BEEN SUBMITED SUCCESSFULLY"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "500": {
+                        "description": "You can only request a role change for yourself"
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "model.RequestStatus": {
+            "type": "string",
+            "enum": [
+                "pending",
+                "accepted",
+                "rejected"
+            ],
+            "x-enum-varnames": [
+                "RequestPending",
+                "RequestAccepted",
+                "RequestRejected"
+            ]
+        },
         "model.UserRole": {
             "type": "string",
             "enum": [
@@ -199,6 +281,37 @@ const docTemplate = `{
                 },
                 "role": {
                     "$ref": "#/definitions/model.UserRole"
+                }
+            }
+        },
+        "routes.RoleChangeRequest": {
+            "type": "object",
+            "required": [
+                "userID"
+            ],
+            "properties": {
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "routes.RoleChangeRequestWithUser": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "newRole": {
+                    "$ref": "#/definitions/model.UserRole"
+                },
+                "status": {
+                    "$ref": "#/definitions/model.RequestStatus"
+                },
+                "userID": {
+                    "type": "integer"
+                },
+                "userName": {
+                    "type": "string"
                 }
             }
         }
