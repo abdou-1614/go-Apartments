@@ -9,6 +9,18 @@ import (
 	"github.com/kataras/iris/v12/middleware/jwt"
 )
 
+// Submit Change Role.
+//
+// This endpoint allows users to submit to change role.
+// @Summary Submit Change Role Request.
+// @Description Submit user request to change role.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body RoleChangeRequest true "User Submit"
+// @Success 200  "THE REQUEST HAS BEEN SUBMITED SUCCESSFULLY"
+// @Failure 400 "Invalid input"
+// @Failure 500 "You can only request a role change for yourself"
 func SubmitRoleChangeRequest(ctx iris.Context) {
 	var requestStatus RoleChangeRequest
 
