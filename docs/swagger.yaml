@@ -100,6 +100,49 @@ info:
   title: Swagger Example APARTEMENTS
   version: "1.0"
 paths:
+  /accept-role-change-request/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Accepts a role change request for an admin user
+      operationId: accept-role-change-request
+      parameters:
+      - description: Request ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success response
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Accept a role change request
+      tags:
+      - Users
   /getAllProperties:
     get:
       consumes:
@@ -183,6 +226,49 @@ paths:
         "409":
           description: User already exists
       summary: Register a new user
+      tags:
+      - Users
+  /reject-role-request/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Rejects a role change request for an admin user
+      operationId: reject-role-change-request
+      parameters:
+      - description: Request ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success response
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Reject a role change request
       tags:
       - Users
   /submit-role-change:
