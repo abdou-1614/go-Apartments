@@ -95,6 +95,19 @@ func ManageRoleChangeRequests(ctx iris.Context) {
 	ctx.JSON(response)
 }
 
+// @Summary Accept a role change request
+// @Description Accepts a role change request for an admin user
+// @ID accept-role-change-request
+// @Accept json
+// @Tags Users
+// @Produce json
+// @Param id path int true "Request ID"
+// @Success 200 {object} map[string]interface{} "Success response"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 403 {object} map[string]interface{} "Forbidden"
+// @Failure 404 {object} map[string]interface{} "Not Found"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Router /accept-role-change-request/{id} [put]
 func AcceptRoleChangeRequest(ctx iris.Context) {
 	claims := jwt.Get(ctx).(*utils.AccessToken)
 
@@ -146,6 +159,19 @@ func AcceptRoleChangeRequest(ctx iris.Context) {
 	ctx.JSON(response)
 }
 
+// @Summary Reject a role change request
+// @Description Rejects a role change request for an admin user
+// @ID reject-role-change-request
+// @Accept json
+// @Tags Users
+// @Produce json
+// @Param id path int true "Request ID"
+// @Success 200 {object} map[string]interface{} "Success response"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 403 {object} map[string]interface{} "Forbidden"
+// @Failure 404 {object} map[string]interface{} "Not Found"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Router /reject-role-request/{id} [put]
 func RejectRoleChangeRequest(ctx iris.Context) {
 	claims := jwt.Get(ctx).(*utils.AccessToken)
 
