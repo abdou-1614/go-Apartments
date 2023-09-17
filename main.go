@@ -96,6 +96,19 @@ func main() {
 		property.Patch("/update/{id}", utils.RoleMiddleware(string(model.RoleLandlords), string(model.RoleAdmin)), routes.UpdateProperty)
 	}
 
+	apartments := app.Party("api/apartments")
+
+	{
+		apartments.Get("/property/{id}", routes.GetApartmentByPropertyID)
+		apartments.Patch("/property/{id}", accessTokenVerifierMiddleware, utils.RoleMiddleware(string(model.RoleAdmin), string(model.RoleLandlords)), routes.UpdateApartment)
+	}
+
+	review := app.Party("api/review")
+
+	{
+		review.Post("/property/{id}", accessTokenVerifierMiddleware, routes.CreateReview)
+	}
+
 	app.Post("/api/refresh", refreshTokenVerifierMiddleware, utils.RefreshToken)
 
 	swaggerUI := swagger.Handler(swaggerFiles.Handler)
