@@ -38,6 +38,7 @@ func performMigration(db *gorm.DB) {
 		&model.Apartments{},
 		&model.Property{},
 		&model.RoleChangeRequest{},
+		&model.Review{},
 	)
 }
 
