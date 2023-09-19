@@ -89,6 +89,114 @@ definitions:
       userName:
         type: string
     type: object
+  routes.UpdateApartmentsInput:
+    properties:
+      ID:
+        type: integer
+      active:
+        type: boolean
+      amenities:
+        items:
+          type: string
+        type: array
+      availableOn:
+        type: string
+      bathrooms:
+        maximum: 6.5
+        minimum: 0.5
+        type: number
+      bedroom:
+        maximum: 6
+        minimum: 0
+        type: integer
+      deposit:
+        type: number
+      description:
+        type: string
+      images:
+        items:
+          type: string
+        type: array
+      leaseLength:
+        maxLength: 256
+        type: string
+      rent:
+        type: number
+      sqFt:
+        maximum: 100000000000
+        type: integer
+      unit:
+        maxLength: 256
+        type: string
+    required:
+    - active
+    - availableOn
+    - bathrooms
+    - bedroom
+    - deposit
+    - leaseLength
+    - rent
+    - sqFt
+    - unit
+    type: object
+  routes.UpdatePropertyInput:
+    properties:
+      amenities:
+        items:
+          type: string
+        type: array
+      apartments:
+        items:
+          $ref: '#/definitions/routes.UpdateApartmentsInput'
+        type: array
+      callingCode:
+        type: string
+      countryCode:
+        type: string
+      description:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      images:
+        items:
+          type: string
+        type: array
+      includedUtilities:
+        items:
+          type: string
+        type: array
+      lastName:
+        type: string
+      laundryType:
+        type: string
+      name:
+        type: string
+      onMarket:
+        type: boolean
+      parkingFee:
+        type: number
+      petsAllowed:
+        type: string
+      phoneNumber:
+        type: string
+      unitType:
+        enum:
+        - single
+        - multiple
+        type: string
+      website:
+        type: string
+    required:
+    - apartments
+    - email
+    - laundryType
+    - onMarket
+    - petsAllowed
+    - phoneNumber
+    - unitType
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -202,6 +310,42 @@ paths:
       summary: Manage All users requests
       tags:
       - Users
+  /properties/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update a property by ID.
+      parameters:
+      - description: Property ID
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: JWT Token
+        description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Property data to update
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/routes.UpdatePropertyInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'MESSAGE": "UPDATED SUCCCESS", "STATUS CODE": 200'
+        "401":
+          description: CAN'T UPDATE PROPERTY
+        "500":
+          description: ERROR
+      summary: Update a property
+      tags:
+      - Property
   /register:
     post:
       consumes:
