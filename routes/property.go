@@ -135,6 +135,19 @@ func DeleteProperty(ctx iris.Context) {
 	ctx.JSON(iris.StatusNoContent)
 }
 
+// UpdateProperty updates a property by ID.
+// @Summary Update a property
+// @Description Update a property by ID.
+// @Tags Property
+// @Accept json
+// @Produce json
+// @Param id path int true "Property ID" Format(int64)
+// @Param Authorization header string true "Bearer {token}" default(JWT Token)
+// @Param input body UpdatePropertyInput true "Property data to update"
+// @Success 200 ""MESSAGE": "UPDATED SUCCCESS", "STATUS CODE": 200"
+// @Failure 401 "CAN'T UPDATE PROPERTY"
+// @Failure 500 "ERROR"
+// @Router /update/{id} [put]
 func UpdateProperty(ctx iris.Context) {
 	params := ctx.Params()
 	id := params.Get("id")
@@ -326,8 +339,14 @@ func GetAllProperty(ctx iris.Context) {
 // @Router /getTop [get]
 func GetTopRatedPropert(ctx iris.Context) {
 	var property []model.Property
-
-	if err := storage.DB.Order("stars DESC").Limit(10).Find(&property).Error; err != nil {
+	if err := storage.DB.
+		Select("properties.*, AVG(reviews.stars) AS average_stars").
+		Joins("LEFT JOIN reviews ON properties.id = reviews.property_id").
+		Group("properties.id").
+		Order("average_stars DESC").
+		Limit(10).
+		Find(&property).
+		Error; err != nil {
 		utils.CreateInternalServerError(ctx)
 		return
 	}
