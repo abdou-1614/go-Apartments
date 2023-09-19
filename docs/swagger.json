@@ -166,6 +166,59 @@
                 }
             }
         },
+        "/properties/{id}": {
+            "put": {
+                "description": "Update a property by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Update a property",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Property ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "JWT Token",
+                        "description": "Bearer {token}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Property data to update",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.UpdatePropertyInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "MESSAGE\": \"UPDATED SUCCCESS\", \"STATUS CODE\": 200"
+                    },
+                    "401": {
+                        "description": "CAN'T UPDATE PROPERTY"
+                    },
+                    "500": {
+                        "description": "ERROR"
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "Register a new user with the provided information.",
@@ -429,6 +482,158 @@
                     "type": "integer"
                 },
                 "userName": {
+                    "type": "string"
+                }
+            }
+        },
+        "routes.UpdateApartmentsInput": {
+            "type": "object",
+            "required": [
+                "active",
+                "availableOn",
+                "bathrooms",
+                "bedroom",
+                "deposit",
+                "leaseLength",
+                "rent",
+                "sqFt",
+                "unit"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "active": {
+                    "type": "boolean"
+                },
+                "amenities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "availableOn": {
+                    "type": "string"
+                },
+                "bathrooms": {
+                    "type": "number",
+                    "maximum": 6.5,
+                    "minimum": 0.5
+                },
+                "bedroom": {
+                    "type": "integer",
+                    "maximum": 6,
+                    "minimum": 0
+                },
+                "deposit": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "leaseLength": {
+                    "type": "string",
+                    "maxLength": 256
+                },
+                "rent": {
+                    "type": "number"
+                },
+                "sqFt": {
+                    "type": "integer",
+                    "maximum": 100000000000
+                },
+                "unit": {
+                    "type": "string",
+                    "maxLength": 256
+                }
+            }
+        },
+        "routes.UpdatePropertyInput": {
+            "type": "object",
+            "required": [
+                "apartments",
+                "email",
+                "laundryType",
+                "onMarket",
+                "petsAllowed",
+                "phoneNumber",
+                "unitType"
+            ],
+            "properties": {
+                "amenities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "apartments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/routes.UpdateApartmentsInput"
+                    }
+                },
+                "callingCode": {
+                    "type": "string"
+                },
+                "countryCode": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "includedUtilities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "laundryType": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "onMarket": {
+                    "type": "boolean"
+                },
+                "parkingFee": {
+                    "type": "number"
+                },
+                "petsAllowed": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "unitType": {
+                    "type": "string",
+                    "enum": [
+                        "single",
+                        "multiple"
+                    ]
+                },
+                "website": {
                     "type": "string"
                 }
             }
