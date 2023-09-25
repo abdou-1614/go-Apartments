@@ -197,6 +197,35 @@ definitions:
     - phoneNumber
     - unitType
     type: object
+  routes.UpdateUnitsInput:
+    properties:
+      ID:
+        type: integer
+      active:
+        type: boolean
+      availableOn:
+        type: string
+      bathrooms:
+        maximum: 6.5
+        minimum: 0.5
+        type: number
+      bedrooms:
+        maximum: 6
+        minimum: 0
+        type: integer
+      sqFt:
+        maximum: 100000000000
+        type: integer
+      unit:
+        maxLength: 512
+        type: string
+    required:
+    - active
+    - availableOn
+    - bathrooms
+    - bedrooms
+    - sqFt
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -251,6 +280,69 @@ paths:
       summary: Accept a role change request
       tags:
       - Users
+  /apartments/property/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of apartments associated with a specific property.
+      parameters:
+      - description: Property ID
+        example: 1
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of apartments
+        "500":
+          description: Internal Server Error
+      summary: Retrieve apartments by Property ID
+      tags:
+      - Apartments
+    patch:
+      consumes:
+      - application/json
+      description: Update an apartment by ID.
+      parameters:
+      - description: Apartment ID
+        example: 1
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: JWT Token
+        description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Apartment data to update
+        in: body
+        name: input
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/routes.UpdateUnitsInput'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "401":
+          description: Not Owner
+        "500":
+          description: Error
+      summary: Update an apartment
+      tags:
+      - Apartments
   /getAllProperties:
     get:
       consumes:
