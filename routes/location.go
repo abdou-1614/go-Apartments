@@ -9,6 +9,16 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
+// AutoComplete performs location autocomplete using a third-party API.
+// @Summary Location Autocomplete
+// @Description Get location suggestions based on user input.
+// @Tags Location
+// @Accept json
+// @Produce json
+// @Param location query string true "Location input for autocomplete"
+// @Param limit query int false "Limit the number of suggestions (default: 10)"
+// @Success 200 {array} string "An array of location suggestions"
+// @Router /location/autocomplete [get]
 func AutoComplete(ctx iris.Context) {
 	limit := "10"
 	location := ctx.URLParam("location")
