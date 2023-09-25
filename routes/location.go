@@ -18,6 +18,8 @@ import (
 // @Param location query string true "Location input for autocomplete"
 // @Param limit query int false "Limit the number of suggestions (default: 10)"
 // @Success 200 {array} string "An array of location suggestions"
+// @Failure 400 "Bad Request"
+// @Failure 500 "Internal Server Error"
 // @Router /location/autocomplete [get]
 func AutoComplete(ctx iris.Context) {
 	limit := "10"
@@ -35,6 +37,17 @@ func AutoComplete(ctx iris.Context) {
 	fetchLocation(url, ctx)
 }
 
+// Search performs a location search using a third-party API.
+// @Summary Location Search
+// @Description Search for locations based on user input.
+// @Tags Location
+// @Accept json
+// @Produce json
+// @Param location query string true "Location input for search"
+// @Success 200 {array} string "An array of location search results"
+// @Failure 400 "Bad Request"
+// @Failure 500 "Internal Server Error"
+// @Router /location/search [get]
 func Search(ctx iris.Context) {
 	location := ctx.URLParam("location")
 	apiKey := os.Getenv("LOCATION-API")
