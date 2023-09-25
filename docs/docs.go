@@ -177,6 +177,53 @@ const docTemplate = `{
                                 "type": "string"
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/location/search": {
+            "get": {
+                "description": "Search for locations based on user input.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Location"
+                ],
+                "summary": "Location Search",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Location input for search",
+                        "name": "location",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of location search results",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
                     }
                 }
             }
