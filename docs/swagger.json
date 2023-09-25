@@ -76,6 +76,98 @@
                 }
             }
         },
+        "/apartments/property/{id}": {
+            "get": {
+                "description": "Retrieve a list of apartments associated with a specific property.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Apartments"
+                ],
+                "summary": "Retrieve apartments by Property ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1,
+                        "description": "Property ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of apartments"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update an apartment by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Apartments"
+                ],
+                "summary": "Update an apartment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1,
+                        "description": "Apartment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "JWT Token",
+                        "description": "Bearer {token}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Apartment data to update",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/routes.UpdateUnitsInput"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Not Owner"
+                    },
+                    "500": {
+                        "description": "Error"
+                    }
+                }
+            }
+        },
         "/getAllProperties": {
             "get": {
                 "description": "Retrieves All properties.",
@@ -783,6 +875,45 @@
                 },
                 "website": {
                     "type": "string"
+                }
+            }
+        },
+        "routes.UpdateUnitsInput": {
+            "type": "object",
+            "required": [
+                "active",
+                "availableOn",
+                "bathrooms",
+                "bedrooms",
+                "sqFt"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "active": {
+                    "type": "boolean"
+                },
+                "availableOn": {
+                    "type": "string"
+                },
+                "bathrooms": {
+                    "type": "number",
+                    "maximum": 6.5,
+                    "minimum": 0.5
+                },
+                "bedrooms": {
+                    "type": "integer",
+                    "maximum": 6,
+                    "minimum": 0
+                },
+                "sqFt": {
+                    "type": "integer",
+                    "maximum": 100000000000
+                },
+                "unit": {
+                    "type": "string",
+                    "maxLength": 512
                 }
             }
         }
