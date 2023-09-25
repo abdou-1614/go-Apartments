@@ -289,6 +289,33 @@ paths:
       summary: Get top-rated properties
       tags:
       - Property
+  /location/autocomplete:
+    get:
+      consumes:
+      - application/json
+      description: Get location suggestions based on user input.
+      parameters:
+      - description: Location input for autocomplete
+        in: query
+        name: location
+        required: true
+        type: string
+      - description: 'Limit the number of suggestions (default: 10)'
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: An array of location suggestions
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Location Autocomplete
+      tags:
+      - Location
   /manage-role-requests:
     get:
       consumes:
