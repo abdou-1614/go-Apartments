@@ -102,6 +102,19 @@ func GetProperty(ctx iris.Context) {
 
 }
 
+// @Summary Delete a property
+// @Description Deletes a property by ID.
+// @ID delete-property
+// @Tags Property
+// @Param id path int true "Property ID"
+// @Security ApiKeyAuth
+// @Success 204 "No Content"
+// @Failure 400 "Bad Request"
+// @Failure 401 "Unauthorized"
+// @Failure 403 "Forbidden"
+// @Failure 404 "Not Found"
+// @Failure 500 "Internal Server Error"
+// @Router /property/delete/{id} [delete]
 func DeleteProperty(ctx iris.Context) {
 	params := ctx.Params()
 	id := params.Get("id")
@@ -144,10 +157,14 @@ func DeleteProperty(ctx iris.Context) {
 // @Param id path int true "Property ID" Format(int64)
 // @Param Authorization header string true "Bearer {token}" default(JWT Token)
 // @Param input body UpdatePropertyInput true "Property data to update"
-// @Success 200 ""MESSAGE": "UPDATED SUCCCESS", "STATUS CODE": 200"
-// @Failure 401 "CAN'T UPDATE PROPERTY"
-// @Failure 500 "ERROR"
-// @Router /update/{id} [put]
+// @Param image formData file true "Property image to upload"
+// @Success 200 "UPDATED SUCCCESS"
+// @Failure 400 "Bad Request"
+// @Failure 401 "Unauthorized"
+// @Failure 403 "Forbidden"
+// @Failure 404 "Not Found"
+// @Failure 500 "Internal Server Error"
+// @Router /property/update/{id} [put]
 func UpdateProperty(ctx iris.Context) {
 	params := ctx.Params()
 	id := params.Get("id")
@@ -352,7 +369,6 @@ func GetTopRatedPropert(ctx iris.Context) {
 	}
 	ctx.JSON(property)
 }
-
 func UpdateApartmentsAndImage(apartment model.Apartments, images []string) {
 	apartmentID := strconv.FormatUint(uint64(apartment.ID), 10)
 
