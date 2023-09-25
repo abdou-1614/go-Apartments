@@ -134,6 +134,47 @@
                 }
             }
         },
+        "/location/autocomplete": {
+            "get": {
+                "description": "Get location suggestions based on user input.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Location"
+                ],
+                "summary": "Location Autocomplete",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Location input for autocomplete",
+                        "name": "location",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit the number of suggestions (default: 10)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of location suggestions",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/manage-role-requests": {
             "get": {
                 "description": "Retrieves All user requests to change role.",
