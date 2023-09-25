@@ -172,7 +172,51 @@ const docTemplate = `{
                 }
             }
         },
-        "/properties/{id}": {
+        "/property/delete/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Deletes a property by ID.",
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Delete a property",
+                "operationId": "delete-property",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Property ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/property/update/{id}": {
             "put": {
                 "description": "Update a property by ID.",
                 "consumes": [
@@ -210,17 +254,33 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/routes.UpdatePropertyInput"
                         }
+                    },
+                    {
+                        "type": "file",
+                        "description": "Property image to upload",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "MESSAGE\": \"UPDATED SUCCCESS\", \"STATUS CODE\": 200"
+                        "description": "UPDATED SUCCCESS"
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     },
                     "401": {
-                        "description": "CAN'T UPDATE PROPERTY"
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     },
                     "500": {
-                        "description": "ERROR"
+                        "description": "Internal Server Error"
                     }
                 }
             }
