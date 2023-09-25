@@ -313,7 +313,38 @@ paths:
             items:
               type: string
             type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
       summary: Location Autocomplete
+      tags:
+      - Location
+  /location/search:
+    get:
+      consumes:
+      - application/json
+      description: Search for locations based on user input.
+      parameters:
+      - description: Location input for search
+        in: query
+        name: location
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: An array of location search results
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Location Search
       tags:
       - Location
   /manage-role-requests:
