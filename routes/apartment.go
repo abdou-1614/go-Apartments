@@ -11,6 +11,16 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+// GetApartmentByPropertyID retrieves apartments by property ID.
+// @Summary Retrieve apartments by Property ID
+// @Description Retrieve a list of apartments associated with a specific property.
+// @Tags Apartments
+// @Accept json
+// @Produce json
+// @Param id path int true "Property ID" Format(int64) Example(1)
+// @Success 200 "List of apartments"
+// @Failure 500 "Internal Server Error"
+// @Router /apartments/property/{id} [get]
 func GetApartmentByPropertyID(ctx iris.Context) {
 	params := ctx.Params()
 	id := params.Get("id")
@@ -27,6 +37,20 @@ func GetApartmentByPropertyID(ctx iris.Context) {
 	ctx.JSON(apartment)
 }
 
+// UpdateApartment updates an apartment by ID.
+// @Summary Update an apartment
+// @Description Update an apartment by ID.
+// @Tags Apartments
+// @Accept json
+// @Produce json
+// @Param id path int true "Apartment ID" Format(int64) Example(1)
+// @Param Authorization header string true "Bearer {token}" default(JWT Token)
+// @Param input body []UpdateUnitsInput true "Apartment data to update"
+// @Success 204 "No Content"
+// @Failure 400 "Bad Request"
+// @Failure 401 "Not Owner"
+// @Failure 500 "Error"
+// @Router /apartments/property/{id} [patch]
 func UpdateApartment(ctx iris.Context) {
 	params := ctx.Params()
 	id := params.Get("id")
