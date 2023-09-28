@@ -194,8 +194,20 @@ func ForgetPassword(ctx iris.Context) {
 	}
 }
 
+// RestPassword resets a user's password using a reset token.
+// @Summary Reset user password
+// @Description Resets a user's password using a reset token.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param input body RestPasswordInput true "New password"
+// @Success 200 {object} map[string]bool "Password reset successfully"
+// @Failure 400 "Validation Error" Example({"message": "Validation Error"})
+// @Failure 401 "Unauthorized" Example({"message": "Unauthorized"})
+// @Failure 500 "Internal Server Error" Example({"message": "Internal Server Error"})
+// @Router /user/reset-password [post]
 func RestPassword(ctx iris.Context) {
-	var passwordInput RestPaswordInput
+	var passwordInput RestPasswordInput
 	err := ctx.ReadJSON(&passwordInput)
 
 	if err != nil {
@@ -279,6 +291,6 @@ type LoginUserInput struct {
 	Password string `json:"password" validate:"required"`
 }
 
-type RestPaswordInput struct {
+type RestPasswordInput struct {
 	Password string `json:"password" validate:"required"`
 }
