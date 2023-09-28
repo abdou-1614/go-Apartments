@@ -174,6 +174,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/forget-password": {
+            "post": {
+                "description": "Sends a password reset email to the user's registered email address.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Send password reset email",
+                "parameters": [
+                    {
+                        "description": "User's registered email address",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.EmailRegisteredInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email sent successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Email\" Example({\"message\": \"Invalid Email"
+                    },
+                    "401": {
+                        "description": "Social Login Account\" Example({\"message\": \"Social Login Account"
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" Example({\"message\": \"Internal Server Error"
+                    }
+                }
+            }
+        },
         "/getAllProperties": {
             "get": {
                 "description": "Retrieves All properties.",
@@ -633,6 +679,17 @@ const docTemplate = `{
                 "RoleLandlords",
                 "RoleGuest"
             ]
+        },
+        "routes.EmailRegisteredInput": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
         },
         "routes.PropertyResponse": {
             "type": "object",
