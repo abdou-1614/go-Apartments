@@ -29,6 +29,16 @@ definitions:
     required:
     - email
     type: object
+  routes.LoginUserInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
   routes.PropertyResponse:
     properties:
       city:
@@ -645,6 +655,36 @@ paths:
           description: 'Internal Server Error" Example({"message": "Internal Server
             Error'
       summary: Send password reset email
+      tags:
+      - Users
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a user using their email and password.
+      parameters:
+      - description: User login credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/routes.LoginUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User login successful
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 'Validation Error" Example({"message": "Validation Error'
+        "401":
+          description: 'Unauthorized" Example({"message": "Unauthorized'
+        "500":
+          description: 'Internal Server Error" Example({"message": "Internal Server
+            Error'
+      summary: Log in user
       tags:
       - Users
   /user/register:
