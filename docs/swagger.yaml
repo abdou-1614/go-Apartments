@@ -76,6 +76,13 @@ definitions:
     - password
     - role
     type: object
+  routes.RestPasswordInput:
+    properties:
+      password:
+        type: string
+    required:
+    - password
+    type: object
   routes.RoleChangeRequest:
     properties:
       userID:
@@ -664,6 +671,37 @@ paths:
         "409":
           description: User already exists
       summary: Register a new user
+      tags:
+      - Users
+  /user/reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Resets a user's password using a reset token.
+      parameters:
+      - description: New password
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/routes.RestPasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Password reset successfully
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+        "400":
+          description: 'Validation Error" Example({"message": "Validation Error'
+        "401":
+          description: 'Unauthorized" Example({"message": "Unauthorized'
+        "500":
+          description: 'Internal Server Error" Example({"message": "Internal Server
+            Error'
+      summary: Reset user password
       tags:
       - Users
 swagger: "2.0"
