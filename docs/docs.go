@@ -649,6 +649,52 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/reset-password": {
+            "post": {
+                "description": "Resets a user's password using a reset token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Reset user password",
+                "parameters": [
+                    {
+                        "description": "New password",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.RestPasswordInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation Error\" Example({\"message\": \"Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized\" Example({\"message\": \"Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" Example({\"message\": \"Internal Server Error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -755,6 +801,17 @@ const docTemplate = `{
                 },
                 "role": {
                     "$ref": "#/definitions/model.UserRole"
+                }
+            }
+        },
+        "routes.RestPasswordInput": {
+            "type": "object",
+            "required": [
+                "password"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
                 }
             }
         },
