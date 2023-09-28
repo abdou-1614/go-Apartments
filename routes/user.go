@@ -64,7 +64,7 @@ func Login(ctx iris.Context) {
 // @Success 201 {object} RegisterUser "User registered successfully"
 // @Failure 400 "Invalid input"
 // @Failure 409 "User already exists"
-// @Router /register [post]
+// @Router /user/register [post]
 func Register(ctx iris.Context) {
 	var userInput RegisterUser
 
@@ -128,7 +128,7 @@ func Register(ctx iris.Context) {
 // @Failure 400 "Invalid Email" Example({"message": "Invalid Email"})
 // @Failure 401 "Social Login Account" Example({"message": "Social Login Account"})
 // @Failure 500 "Internal Server Error" Example({"message": "Internal Server Error"})
-// @Router /auth/forget-password [post]
+// @Router /user/forget-password [post]
 func ForgetPassword(ctx iris.Context) {
 	var emailInput EmailRegisteredInput
 	err := ctx.ReadJSON(&emailInput)
