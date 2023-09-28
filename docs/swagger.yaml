@@ -22,6 +22,13 @@ definitions:
     - RoleUser
     - RoleLandlords
     - RoleGuest
+  routes.EmailRegisteredInput:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
   routes.PropertyResponse:
     properties:
       city:
@@ -343,6 +350,37 @@ paths:
       summary: Update an apartment
       tags:
       - Apartments
+  /auth/forget-password:
+    post:
+      consumes:
+      - application/json
+      description: Sends a password reset email to the user's registered email address.
+      parameters:
+      - description: User's registered email address
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/routes.EmailRegisteredInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Email sent successfully
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+        "400":
+          description: 'Invalid Email" Example({"message": "Invalid Email'
+        "401":
+          description: 'Social Login Account" Example({"message": "Social Login Account'
+        "500":
+          description: 'Internal Server Error" Example({"message": "Internal Server
+            Error'
+      summary: Send password reset email
+      tags:
+      - Users
   /getAllProperties:
     get:
       consumes:
