@@ -610,6 +610,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/login": {
+            "post": {
+                "description": "Logs in a user using their email and password.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Log in user",
+                "parameters": [
+                    {
+                        "description": "User login credentials",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.LoginUserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User login successful",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Validation Error\" Example({\"message\": \"Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized\" Example({\"message\": \"Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" Example({\"message\": \"Internal Server Error"
+                    }
+                }
+            }
+        },
         "/user/register": {
             "post": {
                 "description": "Register a new user with the provided information.",
@@ -733,6 +777,21 @@ const docTemplate = `{
             ],
             "properties": {
                 "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "routes.LoginUserInput": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }
