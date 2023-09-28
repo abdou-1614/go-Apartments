@@ -117,6 +117,18 @@ func Register(ctx iris.Context) {
 
 }
 
+// ForgetPassword sends a password reset email to the user.
+// @Summary Send password reset email
+// @Description Sends a password reset email to the user's registered email address.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param input body EmailRegisteredInput true "User's registered email address"
+// @Success 200 {object} map[string]bool "Email sent successfully"
+// @Failure 400 "Invalid Email" Example({"message": "Invalid Email"})
+// @Failure 401 "Social Login Account" Example({"message": "Social Login Account"})
+// @Failure 500 "Internal Server Error" Example({"message": "Internal Server Error"})
+// @Router /auth/forget-password [post]
 func ForgetPassword(ctx iris.Context) {
 	var emailInput EmailRegisteredInput
 	err := ctx.ReadJSON(&emailInput)
