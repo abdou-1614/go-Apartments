@@ -12,6 +12,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Login logs in a user.
+// @Summary Log in user
+// @Description Logs in a user using their email and password.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param input body LoginUserInput true "User login credentials"
+// @Success 200 {object} map[string]interface{} "User login successful"
+// @Failure 400 "Validation Error" Example({"message": "Validation Error"})
+// @Failure 401 "Unauthorized" Example({"message": "Unauthorized"})
+// @Failure 500 "Internal Server Error" Example({"message": "Internal Server Error"})
+// @Router /user/login [post]
 func Login(ctx iris.Context) {
 	var userInput LoginUserInput
 
