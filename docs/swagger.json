@@ -168,52 +168,6 @@
                 }
             }
         },
-        "/auth/forget-password": {
-            "post": {
-                "description": "Sends a password reset email to the user's registered email address.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Send password reset email",
-                "parameters": [
-                    {
-                        "description": "User's registered email address",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/routes.EmailRegisteredInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Email sent successfully",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "boolean"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid Email\" Example({\"message\": \"Invalid Email"
-                    },
-                    "401": {
-                        "description": "Social Login Account\" Example({\"message\": \"Social Login Account"
-                    },
-                    "500": {
-                        "description": "Internal Server Error\" Example({\"message\": \"Internal Server Error"
-                    }
-                }
-            }
-        },
         "/getAllProperties": {
             "get": {
                 "description": "Retrieves All properties.",
@@ -505,46 +459,6 @@
                 }
             }
         },
-        "/register": {
-            "post": {
-                "description": "Register a new user with the provided information.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Register a new user",
-                "parameters": [
-                    {
-                        "description": "User registration details",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/routes.RegisterUser"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "User registered successfully",
-                        "schema": {
-                            "$ref": "#/definitions/routes.RegisterUser"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input"
-                    },
-                    "409": {
-                        "description": "User already exists"
-                    }
-                }
-            }
-        },
         "/reject-role-request/{id}": {
             "put": {
                 "description": "Rejects a role change request for an admin user",
@@ -640,6 +554,92 @@
                     },
                     "500": {
                         "description": "You can only request a role change for yourself"
+                    }
+                }
+            }
+        },
+        "/user/forget-password": {
+            "post": {
+                "description": "Sends a password reset email to the user's registered email address.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Send password reset email",
+                "parameters": [
+                    {
+                        "description": "User's registered email address",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.EmailRegisteredInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email sent successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Email\" Example({\"message\": \"Invalid Email"
+                    },
+                    "401": {
+                        "description": "Social Login Account\" Example({\"message\": \"Social Login Account"
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" Example({\"message\": \"Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/register": {
+            "post": {
+                "description": "Register a new user with the provided information.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "User registration details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.RegisterUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "schema": {
+                            "$ref": "#/definitions/routes.RegisterUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "409": {
+                        "description": "User already exists"
                     }
                 }
             }
