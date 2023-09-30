@@ -21,16 +21,13 @@ import (
 // @version 1.0
 // @description This is a sample server Petstore server.
 // @termsOfService http://swagger.io/terms/
-
 // @contact.name API Support
 // @contact.url http://www.swagger.io/support
 // @contact.email support@swagger.io
 // @host localhost:8080
 // @BasePath /api
 // @SecurityDefinitions jwt
-// @JWTAuth
-// @TokenUrl http://localhost:8080/authenticate
-
+// @APIKeyAuth JWT
 func main() {
 	godotenv.Load()
 	storage.InitializeDb()
