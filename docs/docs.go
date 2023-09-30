@@ -352,7 +352,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/property": {
+        "/property/create": {
             "post": {
                 "description": "Create a new property listing.",
                 "consumes": [
@@ -386,7 +386,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Property created successfully"
+                        "description": "Property created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/routes.PropertyResponse"
+                        }
                     },
                     "400": {
                         "description": "Validation Error\" Example({\"message\": \"Validation Error"
@@ -509,6 +512,39 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/property/{id}": {
+            "get": {
+                "description": "Retrieves a property by its ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Get a property by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Property ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Property retrieved successfully"
+                    },
+                    "404": {
+                        "description": "Not Found\" Example({\"message\": \"Property Not Exist"
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" Example({\"message\": \"Internal Server Error"
                     }
                 }
             }
