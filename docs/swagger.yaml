@@ -560,6 +560,8 @@ paths:
       responses:
         "200":
           description: Property retrieved successfully
+          schema:
+            $ref: '#/definitions/routes.PropertyResponse'
         "404":
           description: 'Not Found" Example({"message": "Property Not Exist'
         "500":
@@ -613,6 +615,12 @@ paths:
         name: id
         required: true
         type: integer
+      - default: JWT Token
+        description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       responses:
         "204":
           description: No Content
@@ -626,8 +634,6 @@ paths:
           description: Not Found
         "500":
           description: Internal Server Error
-      security:
-      - ApiKeyAuth: []
       summary: Delete a property
       tags:
       - Property
