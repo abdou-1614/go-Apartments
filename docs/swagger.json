@@ -399,11 +399,6 @@
         },
         "/property/delete/{id}": {
             "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Deletes a property by ID.",
                 "tags": [
                     "Property"
@@ -416,6 +411,14 @@
                         "description": "Property ID",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "JWT Token",
+                        "description": "Bearer {token}",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -532,7 +535,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Property retrieved successfully"
+                        "description": "Property retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/routes.PropertyResponse"
+                        }
                     },
                     "404": {
                         "description": "Not Found\" Example({\"message\": \"Property Not Exist"
