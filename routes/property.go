@@ -99,7 +99,7 @@ func CreateProperty(ctx iris.Context) {
 // @Tags Property
 // @Produce json
 // @Param id path int true "Property ID" Format(int64)
-// @Success 200 "Property retrieved successfully"
+// @Success 200 {object} PropertyResponse "Property retrieved successfully"
 // @Failure 404 "Not Found" Example({"message": "Property Not Exist"})
 // @Failure 500 "Internal Server Error" Example({"message": "Internal Server Error"})
 // @Router /property/{id} [get]
