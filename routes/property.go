@@ -15,6 +15,19 @@ import (
 	"github.com/thanhpk/randstr"
 )
 
+// CreateProperty creates a new property listing.
+// @Summary Create a property
+// @Description Create a new property listing.
+// @Tags Property
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer {token}" default(JWT Token)
+// @Param input body PropertyInput true "Property data to create"
+// @Success 200 "Property created successfully"
+// @Failure 400 "Validation Error" Example({"message": "Validation Error"})
+// @Failure 401 "Unauthorized" Example({"message": "Unauthorized"})
+// @Failure 500 "Internal Server Error" Example({"message": "Internal Server Error"})
+// @Router /property [post]
 func CreateProperty(ctx iris.Context) {
 	var propertyInput PropertyInput
 	err := ctx.ReadJSON(&propertyInput)
