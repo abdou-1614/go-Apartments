@@ -352,6 +352,54 @@ const docTemplate = `{
                 }
             }
         },
+        "/property": {
+            "post": {
+                "description": "Create a new property listing.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Property"
+                ],
+                "summary": "Create a property",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "JWT Token",
+                        "description": "Bearer {token}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Property data to create",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.PropertyInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Property created successfully"
+                    },
+                    "400": {
+                        "description": "Validation Error\" Example({\"message\": \"Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized\" Example({\"message\": \"Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" Example({\"message\": \"Internal Server Error"
+                    }
+                }
+            }
+        },
         "/property/delete/{id}": {
             "delete": {
                 "security": [
@@ -770,6 +818,30 @@ const docTemplate = `{
                 "RoleGuest"
             ]
         },
+        "routes.ApartmentsInput": {
+            "type": "object",
+            "required": [
+                "bathrooms",
+                "bedroom",
+                "unit"
+            ],
+            "properties": {
+                "bathrooms": {
+                    "type": "number",
+                    "maximum": 6.5,
+                    "minimum": 0.5
+                },
+                "bedroom": {
+                    "type": "integer",
+                    "maximum": 6,
+                    "minimum": 0
+                },
+                "unit": {
+                    "type": "string",
+                    "maxLength": 256
+                }
+            }
+        },
         "routes.EmailRegisteredInput": {
             "type": "object",
             "required": [
@@ -793,6 +865,64 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                }
+            }
+        },
+        "routes.PropertyInput": {
+            "type": "object",
+            "required": [
+                "apartments",
+                "city",
+                "lat",
+                "lng",
+                "propertyType",
+                "state",
+                "street",
+                "unitType",
+                "userID",
+                "zip"
+            ],
+            "properties": {
+                "apartments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/routes.ApartmentsInput"
+                    }
+                },
+                "city": {
+                    "type": "string",
+                    "maxLength": 256
+                },
+                "lat": {
+                    "type": "number"
+                },
+                "lng": {
+                    "type": "number"
+                },
+                "propertyType": {
+                    "type": "string",
+                    "maxLength": 256
+                },
+                "state": {
+                    "type": "string",
+                    "maxLength": 256
+                },
+                "street": {
+                    "type": "string",
+                    "maxLength": 512
+                },
+                "unitType": {
+                    "type": "string",
+                    "enum": [
+                        "single",
+                        "multiple"
+                    ]
+                },
+                "userID": {
+                    "type": "integer"
+                },
+                "zip": {
+                    "type": "integer"
                 }
             }
         },
