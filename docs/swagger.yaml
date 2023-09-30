@@ -22,6 +22,24 @@ definitions:
     - RoleUser
     - RoleLandlords
     - RoleGuest
+  routes.ApartmentsInput:
+    properties:
+      bathrooms:
+        maximum: 6.5
+        minimum: 0.5
+        type: number
+      bedroom:
+        maximum: 6
+        minimum: 0
+        type: integer
+      unit:
+        maxLength: 256
+        type: string
+    required:
+    - bathrooms
+    - bedroom
+    - unit
+    type: object
   routes.EmailRegisteredInput:
     properties:
       email:
@@ -38,6 +56,49 @@ definitions:
     required:
     - email
     - password
+    type: object
+  routes.PropertyInput:
+    properties:
+      apartments:
+        items:
+          $ref: '#/definitions/routes.ApartmentsInput'
+        type: array
+      city:
+        maxLength: 256
+        type: string
+      lat:
+        type: number
+      lng:
+        type: number
+      propertyType:
+        maxLength: 256
+        type: string
+      state:
+        maxLength: 256
+        type: string
+      street:
+        maxLength: 512
+        type: string
+      unitType:
+        enum:
+        - single
+        - multiple
+        type: string
+      userID:
+        type: integer
+      zip:
+        type: integer
+    required:
+    - apartments
+    - city
+    - lat
+    - lng
+    - propertyType
+    - state
+    - street
+    - unitType
+    - userID
+    - zip
     type: object
   routes.PropertyResponse:
     properties:
@@ -484,6 +545,39 @@ paths:
       summary: Manage All users requests
       tags:
       - Users
+  /property:
+    post:
+      consumes:
+      - application/json
+      description: Create a new property listing.
+      parameters:
+      - default: JWT Token
+        description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Property data to create
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/routes.PropertyInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Property created successfully
+        "400":
+          description: 'Validation Error" Example({"message": "Validation Error'
+        "401":
+          description: 'Unauthorized" Example({"message": "Unauthorized'
+        "500":
+          description: 'Internal Server Error" Example({"message": "Internal Server
+            Error'
+      summary: Create a property
+      tags:
+      - Property
   /property/delete/{id}:
     delete:
       description: Deletes a property by ID.
