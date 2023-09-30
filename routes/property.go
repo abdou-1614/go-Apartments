@@ -23,11 +23,11 @@ import (
 // @Produce json
 // @Param Authorization header string true "Bearer {token}" default(JWT Token)
 // @Param input body PropertyInput true "Property data to create"
-// @Success 200 "Property created successfully"
+// @Success 200 {object} PropertyResponse "Property created successfully"
 // @Failure 400 "Validation Error" Example({"message": "Validation Error"})
 // @Failure 401 "Unauthorized" Example({"message": "Unauthorized"})
 // @Failure 500 "Internal Server Error" Example({"message": "Internal Server Error"})
-// @Router /property [post]
+// @Router /property/create [post]
 func CreateProperty(ctx iris.Context) {
 	var propertyInput PropertyInput
 	err := ctx.ReadJSON(&propertyInput)
@@ -93,6 +93,16 @@ func CreateProperty(ctx iris.Context) {
 	ctx.JSON(property)
 }
 
+// GetProperty retrieves a property by its ID.
+// @Summary Get a property by ID
+// @Description Retrieves a property by its ID.
+// @Tags Property
+// @Produce json
+// @Param id path int true "Property ID" Format(int64)
+// @Success 200 "Property retrieved successfully"
+// @Failure 404 "Not Found" Example({"message": "Property Not Exist"})
+// @Failure 500 "Internal Server Error" Example({"message": "Internal Server Error"})
+// @Router /property/{id} [get]
 func GetProperty(ctx iris.Context) {
 	params := ctx.Params()
 	id := params.Get("id")
