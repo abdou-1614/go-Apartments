@@ -405,11 +405,6 @@ const docTemplate = `{
         },
         "/property/delete/{id}": {
             "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Deletes a property by ID.",
                 "tags": [
                     "Property"
@@ -422,6 +417,14 @@ const docTemplate = `{
                         "description": "Property ID",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "JWT Token",
+                        "description": "Bearer {token}",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -538,7 +541,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Property retrieved successfully"
+                        "description": "Property retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/routes.PropertyResponse"
+                        }
                     },
                     "404": {
                         "description": "Not Found\" Example({\"message\": \"Property Not Exist"
