@@ -130,7 +130,7 @@ func GetProperty(ctx iris.Context) {
 // @ID delete-property
 // @Tags Property
 // @Param id path int true "Property ID"
-// @Security ApiKeyAuth
+// @Param Authorization header string true "Bearer {token}" default(JWT Token)
 // @Success 204 "No Content"
 // @Failure 400 "Bad Request"
 // @Failure 401 "Unauthorized"
