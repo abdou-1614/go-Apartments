@@ -545,7 +545,30 @@ paths:
       summary: Manage All users requests
       tags:
       - Users
-  /property:
+  /property/{id}:
+    get:
+      description: Retrieves a property by its ID.
+      parameters:
+      - description: Property ID
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Property retrieved successfully
+        "404":
+          description: 'Not Found" Example({"message": "Property Not Exist'
+        "500":
+          description: 'Internal Server Error" Example({"message": "Internal Server
+            Error'
+      summary: Get a property by ID
+      tags:
+      - Property
+  /property/create:
     post:
       consumes:
       - application/json
@@ -568,6 +591,8 @@ paths:
       responses:
         "200":
           description: Property created successfully
+          schema:
+            $ref: '#/definitions/routes.PropertyResponse'
         "400":
           description: 'Validation Error" Example({"message": "Validation Error'
         "401":
