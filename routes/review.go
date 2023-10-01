@@ -10,6 +10,20 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
+// CreateReview creates a review for a property.
+// @Summary Create a review
+// @Description Create a new review for a property by ID.
+// @Tags Review
+// @Accept json
+// @Produce json
+// @Param id path int true "Property ID" Format(int64)
+// @Security JWT
+// @Param input body CreateReviewInput true "Review data to create"
+// @Success 200 "OK"
+// @Failure 400 "Bad Request"
+// @Failure 401 "Unauthorized"
+// @Failure 500 "Internal Server Error"
+// @Router /review/property{id} [post]
 func CreateReview(ctx iris.Context) {
 	params := ctx.Params()
 	propertyID := params.Get("id")
