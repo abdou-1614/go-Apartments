@@ -403,6 +403,8 @@ paths:
           description: List of apartments
         "500":
           description: Internal Server Error
+      security:
+      - JWT: []
       summary: Retrieve apartments by Property ID
       tags:
       - Apartments
@@ -443,6 +445,8 @@ paths:
           description: Not Owner
         "500":
           description: Error
+      security:
+      - JWT: []
       summary: Update an apartment
       tags:
       - Apartments
@@ -587,6 +591,8 @@ paths:
         "500":
           description: 'Internal Server Error" Example({"message": "Internal Server
             Error'
+      security:
+      - JWT: []
       summary: Get a property by ID
       tags:
       - Property
@@ -596,12 +602,6 @@ paths:
       - application/json
       description: Create a new property listing.
       parameters:
-      - default: JWT Token
-        description: Bearer {token}
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: Property data to create
         in: body
         name: input
@@ -622,6 +622,8 @@ paths:
         "500":
           description: 'Internal Server Error" Example({"message": "Internal Server
             Error'
+      security:
+      - JWT: []
       summary: Create a property
       tags:
       - Property
@@ -654,6 +656,8 @@ paths:
           description: Not Found
         "500":
           description: Internal Server Error
+      security:
+      - JWT: []
       summary: Delete a property
       tags:
       - Property
@@ -701,6 +705,8 @@ paths:
           description: Not Found
         "500":
           description: Internal Server Error
+      security:
+      - JWT: []
       summary: Update a property
       tags:
       - Property
