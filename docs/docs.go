@@ -22,6 +22,11 @@ const docTemplate = `{
     "paths": {
         "/accept-role-change-request/{id}": {
             "put": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Accepts a role change request for an admin user",
                 "consumes": [
                     "application/json"
@@ -322,6 +327,11 @@ const docTemplate = `{
         },
         "/manage-role-requests": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Retrieves All user requests to change role.",
                 "consumes": [
                     "application/json"
@@ -557,6 +567,11 @@ const docTemplate = `{
         },
         "/reject-role-request/{id}": {
             "put": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Rejects a role change request for an admin user",
                 "consumes": [
                     "application/json"
@@ -617,8 +632,66 @@ const docTemplate = `{
                 }
             }
         },
+        "/review/property{id}": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Create a new review for a property by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Create a review",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Property ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Review data to create",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/routes.CreateReviewInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/submit-role-change": {
             "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Submit user request to change role.",
                 "consumes": [
                     "application/json"
@@ -702,11 +775,6 @@ const docTemplate = `{
         },
         "/user/login": {
             "post": {
-                "security": [
-                    {
-                        "None": []
-                    }
-                ],
                 "description": "Logs in a user using their email and password.",
                 "consumes": [
                     "application/json"
@@ -891,6 +959,29 @@ const docTemplate = `{
                 "unit": {
                     "type": "string",
                     "maxLength": 256
+                }
+            }
+        },
+        "routes.CreateReviewInput": {
+            "type": "object",
+            "required": [
+                "body",
+                "stars",
+                "title",
+                "userID"
+            ],
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "stars": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
                 }
             }
         },
