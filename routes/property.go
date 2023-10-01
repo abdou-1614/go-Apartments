@@ -21,7 +21,7 @@ import (
 // @Tags Property
 // @Accept json
 // @Produce json
-// @Param Authorization header string true "Bearer {token}" default(JWT Token)
+// @Security JWT
 // @Param input body PropertyInput true "Property data to create"
 // @Success 200 {object} PropertyResponse "Property created successfully"
 // @Failure 400 "Validation Error" Example({"message": "Validation Error"})
@@ -98,6 +98,7 @@ func CreateProperty(ctx iris.Context) {
 // @Description Retrieves a property by its ID.
 // @Tags Property
 // @Produce json
+// @Security JWT
 // @Param id path int true "Property ID" Format(int64)
 // @Success 200 {object} PropertyResponse "Property retrieved successfully"
 // @Failure 404 "Not Found" Example({"message": "Property Not Exist"})
@@ -129,6 +130,7 @@ func GetProperty(ctx iris.Context) {
 // @Description Deletes a property by ID.
 // @ID delete-property
 // @Tags Property
+// @Security JWT
 // @Param id path int true "Property ID"
 // @Param Authorization header string true "Bearer {token}" default(JWT Token)
 // @Success 204 "No Content"
@@ -175,6 +177,7 @@ func DeleteProperty(ctx iris.Context) {
 // @Summary Update a property
 // @Description Update a property by ID.
 // @Tags Property
+// @Security JWT
 // @Accept json
 // @Produce json
 // @Param id path int true "Property ID" Format(int64)
