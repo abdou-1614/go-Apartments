@@ -83,6 +83,11 @@
         },
         "/apartments/property/{id}": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Retrieve a list of apartments associated with a specific property.",
                 "consumes": [
                     "application/json"
@@ -115,6 +120,11 @@
                 }
             },
             "patch": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Update an apartment by ID.",
                 "consumes": [
                     "application/json"
@@ -358,6 +368,11 @@
         },
         "/property/create": {
             "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Create a new property listing.",
                 "consumes": [
                     "application/json"
@@ -370,14 +385,6 @@
                 ],
                 "summary": "Create a property",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "default": "JWT Token",
-                        "description": "Bearer {token}",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "Property data to create",
                         "name": "input",
@@ -409,6 +416,11 @@
         },
         "/property/delete/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Deletes a property by ID.",
                 "tags": [
                     "Property"
@@ -456,6 +468,11 @@
         },
         "/property/update/{id}": {
             "put": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Update a property by ID.",
                 "consumes": [
                     "application/json"
@@ -525,6 +542,11 @@
         },
         "/property/{id}": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Retrieves a property by its ID.",
                 "produces": [
                     "application/json"
