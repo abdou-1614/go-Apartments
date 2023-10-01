@@ -15,6 +15,7 @@ import (
 // @Summary Retrieve apartments by Property ID
 // @Description Retrieve a list of apartments associated with a specific property.
 // @Tags Apartments
+// @Security JWT
 // @Accept json
 // @Produce json
 // @Param id path int true "Property ID" Format(int64) Example(1)
@@ -42,6 +43,7 @@ func GetApartmentByPropertyID(ctx iris.Context) {
 // @Description Update an apartment by ID.
 // @Tags Apartments
 // @Accept json
+// @Security JWT
 // @Produce json
 // @Param id path int true "Apartment ID" Format(int64) Example(1)
 // @Param Authorization header string true "Bearer {token}" default(JWT Token)
