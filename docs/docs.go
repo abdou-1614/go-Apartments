@@ -702,6 +702,11 @@ const docTemplate = `{
         },
         "/user/login": {
             "post": {
+                "security": [
+                    {
+                        "None": []
+                    }
+                ],
                 "description": "Logs in a user using their email and password.",
                 "consumes": [
                     "application/json"
@@ -786,6 +791,11 @@ const docTemplate = `{
         },
         "/user/reset-password": {
             "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Resets a user's password using a reset token.",
                 "consumes": [
                     "application/json"
