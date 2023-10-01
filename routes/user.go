@@ -210,6 +210,7 @@ func ForgetPassword(ctx iris.Context) {
 // @Summary Reset user password
 // @Description Resets a user's password using a reset token.
 // @Tags Users
+// @Security JWT
 // @Accept json
 // @Produce json
 // @Param input body RestPasswordInput true "New password"
