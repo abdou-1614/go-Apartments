@@ -89,6 +89,11 @@ const docTemplate = `{
         },
         "/apartments/property/{id}": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Retrieve a list of apartments associated with a specific property.",
                 "consumes": [
                     "application/json"
@@ -121,6 +126,11 @@ const docTemplate = `{
                 }
             },
             "patch": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Update an apartment by ID.",
                 "consumes": [
                     "application/json"
@@ -364,6 +374,11 @@ const docTemplate = `{
         },
         "/property/create": {
             "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Create a new property listing.",
                 "consumes": [
                     "application/json"
@@ -376,14 +391,6 @@ const docTemplate = `{
                 ],
                 "summary": "Create a property",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "default": "JWT Token",
-                        "description": "Bearer {token}",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "Property data to create",
                         "name": "input",
@@ -415,6 +422,11 @@ const docTemplate = `{
         },
         "/property/delete/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Deletes a property by ID.",
                 "tags": [
                     "Property"
@@ -462,6 +474,11 @@ const docTemplate = `{
         },
         "/property/update/{id}": {
             "put": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Update a property by ID.",
                 "consumes": [
                     "application/json"
@@ -531,6 +548,11 @@ const docTemplate = `{
         },
         "/property/{id}": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Retrieves a property by its ID.",
                 "produces": [
                     "application/json"
