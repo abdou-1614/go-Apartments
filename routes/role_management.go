@@ -15,6 +15,7 @@ import (
 // @Summary Submit Change Role Request.
 // @Description Submit user request to change role.
 // @Tags Users
+// @Security JWT
 // @Accept json
 // @Produce json
 // @Param request body RoleChangeRequest true "User Submit"
@@ -62,6 +63,7 @@ func SubmitRoleChangeRequest(ctx iris.Context) {
 // @Produce json
 // @Success 200 {array} RoleChangeRequestWithUser
 // @Tags Users
+// @Security JWT
 // @Failure 500 "Internal Server Error"
 // @Failure 403 "Only admins can manage role change requests"
 // @Router /manage-role-requests [get]
@@ -100,6 +102,7 @@ func ManageRoleChangeRequests(ctx iris.Context) {
 // @ID accept-role-change-request
 // @Accept json
 // @Tags Users
+// @Security JWT
 // @Produce json
 // @Param id path int true "Request ID"
 // @Success 200 {object} map[string]interface{} "Success response"
@@ -164,6 +167,7 @@ func AcceptRoleChangeRequest(ctx iris.Context) {
 // @ID reject-role-change-request
 // @Accept json
 // @Tags Users
+// @Security JWT
 // @Produce json
 // @Param id path int true "Request ID"
 // @Success 200 {object} map[string]interface{} "Success response"
