@@ -26,8 +26,6 @@ import (
 // @contact.email support@swagger.io
 // @host localhost:8080
 // @BasePath /api
-// @SecurityDefinitions jwt
-// @APIKeyAuth JWT
 func main() {
 	godotenv.Load()
 	storage.InitializeDb()
