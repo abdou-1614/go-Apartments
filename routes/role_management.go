@@ -118,14 +118,11 @@ func AcceptRoleChangeRequest(ctx iris.Context) {
 		utils.CreateError(iris.StatusForbidden, "NOT ADMIN", "Only admins can manage role change requests", ctx)
 		return
 	}
-
 	requestID, err := ctx.Params().GetUint("id")
-
 	if err != nil {
 		utils.CreateError(iris.StatusBadRequest, "INVALID ID", "INVLAID ID", ctx)
 		return
 	}
-
 	var request model.RoleChangeRequest
 
 	if err := storage.DB.First(&request, requestID).Error; err != nil {
