@@ -809,6 +809,8 @@ paths:
         "500":
           description: 'Internal Server Error" Example({"message": "Internal Server
             Error'
+      security:
+      - None: []
       summary: Log in user
       tags:
       - Users
@@ -866,6 +868,8 @@ paths:
         "500":
           description: 'Internal Server Error" Example({"message": "Internal Server
             Error'
+      security:
+      - JWT: []
       summary: Reset user password
       tags:
       - Users
