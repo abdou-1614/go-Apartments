@@ -63,13 +63,6 @@ func main() {
 		return tokenInput.RefreshToken
 	})
 
-	location := app.Party("api/location")
-
-	{
-		location.Get("/autocomplete", routes.AutoComplete)
-		location.Get("/search", accessTokenVerifierMiddleware, routes.Search)
-	}
-
 	user := app.Party("api/user")
 
 	{
@@ -92,6 +85,13 @@ func main() {
 		property.Get("/top-rated", routes.GetTopRatedPropert)
 		property.Delete("/delete/{id}", accessTokenVerifierMiddleware, routes.DeleteProperty)
 		property.Patch("/update/{id}", utils.RoleMiddleware(string(model.RoleLandlords), string(model.RoleAdmin)), routes.UpdateProperty)
+	}
+
+	location := app.Party("api/location")
+
+	{
+		location.Get("/autocomplete", routes.AutoComplete)
+		location.Get("/search", accessTokenVerifierMiddleware, routes.Search)
 	}
 
 	apartments := app.Party("api/apartments")
